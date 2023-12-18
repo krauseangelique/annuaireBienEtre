@@ -27,6 +27,9 @@ class Bloc
     #[ORM\ManyToMany(targetEntity: Internaute::class, mappedBy: 'bloc')]
     private Collection $internautes;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $position = null;
+
     public function __construct()
     {
         $this->internautes = new ArrayCollection();
@@ -84,6 +87,18 @@ class Bloc
         if ($this->internautes->removeElement($internaute)) {
             $internaute->removeBloc($this);
         }
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?int $position): static
+    {
+        $this->position = $position;
 
         return $this;
     }
