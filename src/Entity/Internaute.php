@@ -10,12 +10,12 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: InternauteRepository::class)]
 #[Broadcast]
-class Internaute
+class Internaute extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    // #[ORM\Id]
+    // #[ORM\GeneratedValue]
+    // #[ORM\Column]
+    // private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
@@ -201,30 +201,4 @@ class Internaute
         return $this;
     }
 
-    /**
-     * @return Collection<int, Prestataire>
-     */
-    public function getPrestataires(): Collection
-    {
-        return $this->prestataires;
-    }
-
-    public function addPrestataire(Prestataire $prestataire): static
-    {
-        if (!$this->prestataires->contains($prestataire)) {
-            $this->prestataires->add($prestataire);
-            $prestataire->addInternaute($this);
-        }
-
-        return $this;
-    }
-
-    public function removePrestataire(Prestataire $prestataire): static
-    {
-        if ($this->prestataires->removeElement($prestataire)) {
-            $prestataire->removeInternaute($this);
-        }
-
-        return $this;
-    }
 }

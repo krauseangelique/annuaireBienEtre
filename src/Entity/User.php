@@ -24,49 +24,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    protected ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    private ?string $email = null;
+    protected ?string $email = null;
 
     #[ORM\Column]
-    private array $roles = [];
+    protected array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
-    private ?string $password = null;
+    protected ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $adresseNum = null;
+    protected ?string $adresseNum = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $adresseRue = null;
+    protected ?string $adresseRue = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $inscription = null;
+    protected ?\DateTimeInterface $inscription = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $typeUtilisateur = null;
+    protected ?string $typeUtilisateur = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $nbEssaisInfructueux = null;
+    protected ?int $nbEssaisInfructueux = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $banni = null;
+    protected ?bool $banni = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $inscriptConfirmee = null;
+    protected ?bool $inscriptConfirmee = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?CodePostal $adresseCP = null;
+    protected ?CodePostal $adresseCP = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?Province $adresseProvince = null;
+    protected ?Province $adresseProvince = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?Commune $commune = null;
+    protected ?Commune $commune = null;
 
     #[ORM\OneToOne(mappedBy: 'utilisateur', cascade: ['persist', 'remove'])]
     private ?Internaute $internaute = null;

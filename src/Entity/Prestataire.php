@@ -10,12 +10,13 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: PrestataireRepository::class)]
 #[Broadcast]
-class Prestataire
+
+abstract class Prestataire extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    // #[ORM\Id]
+    // #[ORM\GeneratedValue]
+    // #[ORM\Column]
+    // private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
@@ -47,11 +48,14 @@ class Prestataire
     #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: Commentaire::class)]
     private Collection $commentaire;
 
-    #[ORM\ManyToMany(targetEntity: Internaute::class, inversedBy: 'prestataires')]
-    private Collection $internaute;
+    // #[ORM\ManyToMany(targetEntity: Internaute::class, inversedBy: 'prestataires')]
+    // private Collection $internaute;
 
     #[ORM\OneToOne(inversedBy: 'prestataire', cascade: ['persist', 'remove'])]
     private ?User $utilisateur = null;
+
+    #[ORM\OneToMany(mappedBy: 'photoPrestataire', targetEntity: Image::class)]
+    private Collection $images;
 
     public function __construct()
     {
@@ -61,7 +65,8 @@ class Prestataire
         $this->photo = new ArrayCollection();
         $this->stage = new ArrayCollection();
         $this->commentaire = new ArrayCollection();
-        $this->internaute = new ArrayCollection();
+       // $this->internaute = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -291,30 +296,6 @@ class Prestataire
         return $this;
     }
 
-    /**
-     * @return Collection<int, Internaute>
-     */
-    public function getInternaute(): Collection
-    {
-        return $this->internaute;
-    }
-
-    public function addInternaute(Internaute $internaute): static
-    {
-        if (!$this->internaute->contains($internaute)) {
-            $this->internaute->add($internaute);
-        }
-
-        return $this;
-    }
-
-    public function removeInternaute(Internaute $internaute): static
-    {
-        $this->internaute->removeElement($internaute);
-
-        return $this;
-    }
-
     public function getUtilisateur(): ?User
     {
         return $this->utilisateur;
@@ -323,6 +304,36 @@ class Prestataire
     public function setUtilisateur(?User $utilisateur): static
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Image>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): static
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setPhotoPrestataire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): static
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getPhotoPrestataire() === $this) {
+                $image->setPhotoPrestataire(null);
+            }
+        }
 
         return $this;
     }

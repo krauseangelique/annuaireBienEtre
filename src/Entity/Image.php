@@ -22,16 +22,19 @@ class Image
     private ?string $image = null;
 
     #[ORM\OneToOne(mappedBy: 'image', cascade: ['persist', 'remove'])]
-    private ?CategorieServices $categorieServices = null;
+    private ?CategorieServices $categorieServices = null; // Photo de la Categorie de Services
 
     #[ORM\OneToOne(mappedBy: 'image', cascade: ['persist', 'remove'])]
-    private ?Internaute $internaute = null;
+    private ?Internaute $internaute = null; // Avatar
 
     #[ORM\ManyToOne(inversedBy: 'logo')]
-    private ?Prestataire $prestataire = null;
+    private ?Prestataire $prestataire = null; // logo Prestataire
 
     #[ORM\ManyToOne(inversedBy: 'photo')]
     private ?Prestataire $prestatairePhoto = null;
+
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    private ?Prestataire $photoPrestataire = null;
 
     public function getId(): ?int
     {
@@ -126,6 +129,18 @@ class Image
     public function setPrestatairePhoto(?Prestataire $prestatairePhoto): static
     {
         $this->prestatairePhoto = $prestatairePhoto;
+
+        return $this;
+    }
+
+    public function getPhotoPrestataire(): ?Prestataire
+    {
+        return $this->photoPrestataire;
+    }
+
+    public function setPhotoPrestataire(?Prestataire $photoPrestataire): static
+    {
+        $this->photoPrestataire = $photoPrestataire;
 
         return $this;
     }
