@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BlocRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
@@ -21,6 +23,14 @@ class Bloc
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
+
+    #[ORM\ManyToMany(targetEntity: Internaute::class, mappedBy: 'bloc')]
+    private Collection $internautes;
+
+    public function __construct()
+    {
+        $this->internautes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -47,6 +57,33 @@ class Bloc
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Internaute>
+     */
+    public function getInternautes(): Collection
+    {
+        return $this->internautes;
+    }
+
+    public function addInternaute(Internaute $internaute): static
+    {
+        if (!$this->internautes->contains($internaute)) {
+            $this->internautes->add($internaute);
+            $internaute->addBloc($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInternaute(Internaute $internaute): static
+    {
+        if ($this->internautes->removeElement($internaute)) {
+            $internaute->removeBloc($this);
+        }
 
         return $this;
     }
