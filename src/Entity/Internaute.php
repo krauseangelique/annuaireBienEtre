@@ -41,11 +41,15 @@ class Internaute
     #[ORM\OneToOne(inversedBy: 'internaute', cascade: ['persist', 'remove'])]
     private ?User $utilisateur = null;
 
+    #[ORM\ManyToMany(targetEntity: Prestataire::class, mappedBy: 'internaute')]
+    private Collection $prestataires;
+
     public function __construct()
     {
         $this->abus = new ArrayCollection();
         $this->commentaire = new ArrayCollection();
         $this->bloc = new ArrayCollection();
+        $this->prestataires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -193,6 +197,33 @@ class Internaute
     public function setUtilisateur(?User $utilisateur): static
     {
         $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prestataire>
+     */
+    public function getPrestataires(): Collection
+    {
+        return $this->prestataires;
+    }
+
+    public function addPrestataire(Prestataire $prestataire): static
+    {
+        if (!$this->prestataires->contains($prestataire)) {
+            $this->prestataires->add($prestataire);
+            $prestataire->addInternaute($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrestataire(Prestataire $prestataire): static
+    {
+        if ($this->prestataires->removeElement($prestataire)) {
+            $prestataire->removeInternaute($this);
+        }
 
         return $this;
     }

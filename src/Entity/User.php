@@ -71,6 +71,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'utilisateur', cascade: ['persist', 'remove'])]
     private ?Internaute $internaute = null;
 
+    #[ORM\OneToOne(mappedBy: 'utilisateur', cascade: ['persist', 'remove'])]
+    private ?Prestataire $prestataire = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -279,6 +282,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->internaute = $internaute;
+
+        return $this;
+    }
+
+    public function getPrestataire(): ?Prestataire
+    {
+        return $this->prestataire;
+    }
+
+    public function setPrestataire(?Prestataire $prestataire): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($prestataire === null && $this->prestataire !== null) {
+            $this->prestataire->setUtilisateur(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($prestataire !== null && $prestataire->getUtilisateur() !== $this) {
+            $prestataire->setUtilisateur($this);
+        }
+
+        $this->prestataire = $prestataire;
 
         return $this;
     }

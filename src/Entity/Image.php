@@ -27,6 +27,12 @@ class Image
     #[ORM\OneToOne(mappedBy: 'image', cascade: ['persist', 'remove'])]
     private ?Internaute $internaute = null;
 
+    #[ORM\ManyToOne(inversedBy: 'logo')]
+    private ?Prestataire $prestataire = null;
+
+    #[ORM\ManyToOne(inversedBy: 'photo')]
+    private ?Prestataire $prestatairePhoto = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -96,6 +102,30 @@ class Image
         }
 
         $this->internaute = $internaute;
+
+        return $this;
+    }
+
+    public function getPrestataire(): ?Prestataire
+    {
+        return $this->prestataire;
+    }
+
+    public function setPrestataire(?Prestataire $prestataire): static
+    {
+        $this->prestataire = $prestataire;
+
+        return $this;
+    }
+
+    public function getPrestatairePhoto(): ?Prestataire
+    {
+        return $this->prestatairePhoto;
+    }
+
+    public function setPrestatairePhoto(?Prestataire $prestatairePhoto): static
+    {
+        $this->prestatairePhoto = $prestatairePhoto;
 
         return $this;
     }

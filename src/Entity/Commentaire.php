@@ -36,6 +36,9 @@ class Commentaire
     #[ORM\ManyToOne(inversedBy: 'commentaire')]
     private ?Internaute $internaute = null;
 
+    #[ORM\ManyToOne(inversedBy: 'commentaire')]
+    private ?Prestataire $prestataire = null;
+
     public function __construct()
     {
         $this->abus = new ArrayCollection();
@@ -132,6 +135,18 @@ class Commentaire
     public function setInternaute(?Internaute $internaute): static
     {
         $this->internaute = $internaute;
+
+        return $this;
+    }
+
+    public function getPrestataire(): ?Prestataire
+    {
+        return $this->prestataire;
+    }
+
+    public function setPrestataire(?Prestataire $prestataire): static
+    {
+        $this->prestataire = $prestataire;
 
         return $this;
     }

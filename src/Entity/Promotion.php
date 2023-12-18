@@ -40,6 +40,9 @@ class Promotion
     #[ORM\ManyToOne(inversedBy: 'promotion')]
     private ?CategorieServices $categorieServices = null;
 
+    #[ORM\ManyToOne(inversedBy: 'promotion')]
+    private ?Prestataire $prestataire = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +140,18 @@ class Promotion
     public function setCategorieServices(?CategorieServices $categorieServices): static
     {
         $this->categorieServices = $categorieServices;
+
+        return $this;
+    }
+
+    public function getPrestataire(): ?Prestataire
+    {
+        return $this->prestataire;
+    }
+
+    public function setPrestataire(?Prestataire $prestataire): static
+    {
+        $this->prestataire = $prestataire;
 
         return $this;
     }
