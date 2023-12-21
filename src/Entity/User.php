@@ -18,7 +18,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[DiscriminatorMap(["user" => "User", "internaute" => "Internaute"])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType('JOINED')]
-
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -67,12 +66,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     protected ?Commune $commune = null;
+    // c'est un héritage pas une relation
+    // #[ORM\OneToOne(mappedBy: 'utilisateur', cascade: ['persist', 'remove'])]
+    // private ?Internaute $internaute = null;
 
-    #[ORM\OneToOne(mappedBy: 'utilisateur', cascade: ['persist', 'remove'])]
-    private ?Internaute $internaute = null;
-
-    #[ORM\OneToOne(mappedBy: 'utilisateur', cascade: ['persist', 'remove'])]
-    private ?Prestataire $prestataire = null;
 
     public function getId(): ?int
     {
@@ -260,50 +257,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCommune(?Commune $commune): static
     {
         $this->commune = $commune;
-
-        return $this;
-    }
-
-    public function getInternaute(): ?Internaute
-    {
-        return $this->internaute;
-    }
-
-    public function setInternaute(?Internaute $internaute): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($internaute === null && $this->internaute !== null) {
-            $this->internaute->setUtilisateur(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($internaute !== null && $internaute->getUtilisateur() !== $this) {
-            $internaute->setUtilisateur($this);
-        }
-
-        $this->internaute = $internaute;
-
-        return $this;
-    }
-
-    public function getPrestataire(): ?Prestataire
-    {
-        return $this->prestataire;
-    }
-
-    public function setPrestataire(?Prestataire $prestataire): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($prestataire === null && $this->prestataire !== null) {
-            $this->prestataire->setUtilisateur(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($prestataire !== null && $prestataire->getUtilisateur() !== $this) {
-            $prestataire->setUtilisateur($this);
-        }
-
-        $this->prestataire = $prestataire;
 
         return $this;
     }

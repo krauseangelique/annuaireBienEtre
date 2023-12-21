@@ -30,6 +30,9 @@ class Bloc
     #[ORM\Column(nullable: true)]
     private ?int $position = null;
 
+    #[ORM\OneToOne(mappedBy: 'blocId', cascade: ['persist', 'remove'])]
+    private ?Position $positionBloc = null;
+
     public function __construct()
     {
         $this->internautes = new ArrayCollection();
@@ -99,6 +102,28 @@ class Bloc
     public function setPosition(?int $position): static
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getPositionBloc(): ?Position
+    {
+        return $this->positionBloc;
+    }
+
+    public function setPositionBloc(?Position $positionBloc): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($positionBloc === null && $this->positionBloc !== null) {
+            $this->positionBloc->setBlocId(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($positionBloc !== null && $positionBloc->getBlocId() !== $this) {
+            $positionBloc->setBlocId($this);
+        }
+
+        $this->positionBloc = $positionBloc;
 
         return $this;
     }

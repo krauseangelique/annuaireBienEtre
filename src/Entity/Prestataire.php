@@ -13,10 +13,6 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 
 abstract class Prestataire extends User
 {
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column]
-    // private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
@@ -48,12 +44,6 @@ abstract class Prestataire extends User
     #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: Commentaire::class)]
     private Collection $commentaire;
 
-    // #[ORM\ManyToMany(targetEntity: Internaute::class, inversedBy: 'prestataires')]
-    // private Collection $internaute;
-
-    #[ORM\OneToOne(inversedBy: 'prestataire', cascade: ['persist', 'remove'])]
-    private ?User $utilisateur = null;
-
     #[ORM\OneToMany(mappedBy: 'photoPrestataire', targetEntity: Image::class)]
     private Collection $images;
 
@@ -65,7 +55,7 @@ abstract class Prestataire extends User
         $this->photo = new ArrayCollection();
         $this->stage = new ArrayCollection();
         $this->commentaire = new ArrayCollection();
-       // $this->internaute = new ArrayCollection();
+        // $this->internaute = new ArrayCollection();
         $this->images = new ArrayCollection();
     }
 
@@ -296,17 +286,8 @@ abstract class Prestataire extends User
         return $this;
     }
 
-    public function getUtilisateur(): ?User
-    {
-        return $this->utilisateur;
-    }
+    // on ne va pas utiliser les getUtilisateur() et les setUtilisateur() car on a utiliser l'héritage
 
-    public function setUtilisateur(?User $utilisateur): static
-    {
-        $this->utilisateur = $utilisateur;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Image>

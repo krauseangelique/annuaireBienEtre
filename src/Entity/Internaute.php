@@ -12,11 +12,6 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 #[Broadcast]
 class Internaute extends User
 {
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column]
-    // private ?int $id = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
 
@@ -38,11 +33,12 @@ class Internaute extends User
     #[ORM\ManyToMany(targetEntity: Bloc::class, inversedBy: 'internautes')]
     private Collection $bloc;
 
-    #[ORM\OneToOne(inversedBy: 'internaute', cascade: ['persist', 'remove'])]
-    private ?User $utilisateur = null;
 
     #[ORM\ManyToMany(targetEntity: Prestataire::class, mappedBy: 'internaute')]
     private Collection $prestataires;
+
+    #[ORM\OneToOne(mappedBy: 'internauteId', cascade: ['persist', 'remove'])]
+    private ?Position $position = null;
 
     public function __construct()
     {
@@ -189,14 +185,24 @@ class Internaute extends User
         return $this;
     }
 
-    public function getUtilisateur(): ?User
+    public function getPosition(): ?Position
     {
-        return $this->utilisateur;
+        return $this->position;
     }
 
-    public function setUtilisateur(?User $utilisateur): static
+    public function setPosition(?Position $position): static
     {
-        $this->utilisateur = $utilisateur;
+        // unset the owning side of the relation if necessary
+        if ($position === null && $this->position !== null) {
+            $this->position->setInternauteId(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($position !== null && $position->getInternauteId() !== $this) {
+            $position->setInternauteId($this);
+        }
+
+        $this->position = $position;
 
         return $this;
     }
