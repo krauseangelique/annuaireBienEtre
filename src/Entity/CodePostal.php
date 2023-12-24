@@ -23,9 +23,13 @@ class CodePostal
     #[ORM\OneToMany(mappedBy: 'adresseCP', targetEntity: User::class)]
     private Collection $users;
 
+    #[ORM\OneToMany(mappedBy: 'codePostal', targetEntity: Commune::class)]
+    private Collection $commune;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->commune = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,6 +73,36 @@ class CodePostal
             // set the owning side to null (unless already changed)
             if ($user->getAdresseCP() === $this) {
                 $user->setAdresseCP(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commune>
+     */
+    public function getCommune(): Collection
+    {
+        return $this->commune;
+    }
+
+    public function addCommune(Commune $commune): static
+    {
+        if (!$this->commune->contains($commune)) {
+            $this->commune->add($commune);
+            $commune->setCodePostal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommune(Commune $commune): static
+    {
+        if ($this->commune->removeElement($commune)) {
+            // set the owning side to null (unless already changed)
+            if ($commune->getCodePostal() === $this) {
+                $commune->setCodePostal(null);
             }
         }
 

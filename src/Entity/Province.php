@@ -23,9 +23,13 @@ class Province
     #[ORM\OneToMany(mappedBy: 'adresseProvince', targetEntity: User::class)]
     private Collection $users;
 
+    #[ORM\OneToMany(mappedBy: 'province', targetEntity: Commune::class)]
+    private Collection $communes;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->communes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,6 +73,36 @@ class Province
             // set the owning side to null (unless already changed)
             if ($user->getAdresseProvince() === $this) {
                 $user->setAdresseProvince(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commune>
+     */
+    public function getCommunes(): Collection
+    {
+        return $this->communes;
+    }
+
+    public function addCommune(Commune $commune): static
+    {
+        if (!$this->communes->contains($commune)) {
+            $this->communes->add($commune);
+            $commune->setProvince($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommune(Commune $commune): static
+    {
+        if ($this->communes->removeElement($commune)) {
+            // set the owning side to null (unless already changed)
+            if ($commune->getProvince() === $this) {
+                $commune->setProvince(null);
             }
         }
 

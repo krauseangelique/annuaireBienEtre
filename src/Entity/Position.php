@@ -18,11 +18,13 @@ class Position
     #[ORM\Column(nullable: true)]
     private ?int $Ordre = null;
 
-    #[ORM\OneToOne(inversedBy: 'position', cascade: ['persist', 'remove'])]
-    private ?Internaute $internauteId = null;
 
-    #[ORM\OneToOne(inversedBy: 'positionBloc', cascade: ['persist', 'remove'])]
-    private ?Bloc $blocId = null;
+
+    #[ORM\ManyToOne(inversedBy: 'position')]
+    private ?Internaute $internaute = null;
+
+    #[ORM\ManyToOne(inversedBy: 'position')]
+    private ?Bloc $blocPosition = null;
 
     public function getId(): ?int
     {
@@ -41,26 +43,30 @@ class Position
         return $this;
     }
 
-    public function getInternauteId(): ?Internaute
+    
+
+
+
+    public function getInternaute(): ?Internaute
     {
-        return $this->internauteId;
+        return $this->internaute;
     }
 
-    public function setInternauteId(?Internaute $internauteId): static
+    public function setInternaute(?Internaute $internaute): static
     {
-        $this->internauteId = $internauteId;
+        $this->internaute = $internaute;
 
         return $this;
     }
 
-    public function getBlocId(): ?Bloc
+    public function getBlocPosition(): ?Bloc
     {
-        return $this->blocId;
+        return $this->blocPosition;
     }
 
-    public function setBlocId(?Bloc $blocId): static
+    public function setBlocPosition(?Bloc $blocPosition): static
     {
-        $this->blocId = $blocId;
+        $this->blocPosition = $blocPosition;
 
         return $this;
     }

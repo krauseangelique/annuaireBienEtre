@@ -44,8 +44,9 @@ abstract class Prestataire extends User
     #[ORM\OneToMany(mappedBy: 'prestataire', targetEntity: Commentaire::class)]
     private Collection $commentaire;
 
-    #[ORM\OneToMany(mappedBy: 'photoPrestataire', targetEntity: Image::class)]
-    private Collection $images;
+
+    #[ORM\ManyToMany(targetEntity: Internaute::class, mappedBy: 'prestatairesFavoris')]
+    private Collection $internautesFavoris;
 
     public function __construct()
     {
@@ -56,7 +57,7 @@ abstract class Prestataire extends User
         $this->stage = new ArrayCollection();
         $this->commentaire = new ArrayCollection();
         // $this->internaute = new ArrayCollection();
-        $this->images = new ArrayCollection();
+        $this->internautesFavoris = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -288,32 +289,28 @@ abstract class Prestataire extends User
 
     // on ne va pas utiliser les getUtilisateur() et les setUtilisateur() car on a utiliser l'héritage
 
-
     /**
-     * @return Collection<int, Image>
+     * @return Collection<int, Internaute>
      */
-    public function getImages(): Collection
+    public function getInternautesFavoris(): Collection
     {
-        return $this->images;
+        return $this->internautesFavoris;
     }
 
-    public function addImage(Image $image): static
+    public function addInternautesFavori(Internaute $internautesFavori): static
     {
-        if (!$this->images->contains($image)) {
-            $this->images->add($image);
-            $image->setPhotoPrestataire($this);
+        if (!$this->internautesFavoris->contains($internautesFavori)) {
+            $this->internautesFavoris->add($internautesFavori);
+            $internautesFavori->addPrestatairesFavori($this);
         }
 
         return $this;
     }
 
-    public function removeImage(Image $image): static
+    public function removeInternautesFavori(Internaute $internautesFavori): static
     {
-        if ($this->images->removeElement($image)) {
-            // set the owning side to null (unless already changed)
-            if ($image->getPhotoPrestataire() === $this) {
-                $image->setPhotoPrestataire(null);
-            }
+        if ($this->internautesFavoris->removeElement($internautesFavori)) {
+            $internautesFavori->removePrestatairesFavori($this);
         }
 
         return $this;

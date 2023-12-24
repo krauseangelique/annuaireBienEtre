@@ -24,19 +24,18 @@ class Bloc
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: Internaute::class, mappedBy: 'bloc')]
-    private Collection $internautes;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $position = null;
-
-    #[ORM\OneToOne(mappedBy: 'blocId', cascade: ['persist', 'remove'])]
-    private ?Position $positionBloc = null;
+    #[ORM\OneToMany(mappedBy: 'blocPosition', targetEntity: Position::class)]
+    private Collection $position;
 
     public function __construct()
     {
-        $this->internautes = new ArrayCollection();
+        $this->position = new ArrayCollection();
     }
+
+
+
+
+
 
     public function getId(): ?int
     {
@@ -68,62 +67,31 @@ class Bloc
     }
 
     /**
-     * @return Collection<int, Internaute>
+     * @return Collection<int, Position>
      */
-    public function getInternautes(): Collection
-    {
-        return $this->internautes;
-    }
-
-    public function addInternaute(Internaute $internaute): static
-    {
-        if (!$this->internautes->contains($internaute)) {
-            $this->internautes->add($internaute);
-            $internaute->addBloc($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInternaute(Internaute $internaute): static
-    {
-        if ($this->internautes->removeElement($internaute)) {
-            $internaute->removeBloc($this);
-        }
-
-        return $this;
-    }
-
-    public function getPosition(): ?int
+    public function getPosition(): Collection
     {
         return $this->position;
     }
 
-    public function setPosition(?int $position): static
+    public function addPosition(Position $position): static
     {
-        $this->position = $position;
+        if (!$this->position->contains($position)) {
+            $this->position->add($position);
+            $position->setBlocPosition($this);
+        }
 
         return $this;
     }
 
-    public function getPositionBloc(): ?Position
+    public function removePosition(Position $position): static
     {
-        return $this->positionBloc;
-    }
-
-    public function setPositionBloc(?Position $positionBloc): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($positionBloc === null && $this->positionBloc !== null) {
-            $this->positionBloc->setBlocId(null);
+        if ($this->position->removeElement($position)) {
+            // set the owning side to null (unless already changed)
+            if ($position->getBlocPosition() === $this) {
+                $position->setBlocPosition(null);
+            }
         }
-
-        // set the owning side of the relation if necessary
-        if ($positionBloc !== null && $positionBloc->getBlocId() !== $this) {
-            $positionBloc->setBlocId($this);
-        }
-
-        $this->positionBloc = $positionBloc;
 
         return $this;
     }

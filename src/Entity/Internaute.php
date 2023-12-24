@@ -30,22 +30,25 @@ class Internaute extends User
     #[ORM\OneToOne(inversedBy: 'internaute', cascade: ['persist', 'remove'])]
     private ?Image $image = null;
 
-    #[ORM\ManyToMany(targetEntity: Bloc::class, inversedBy: 'internautes')]
-    private Collection $bloc;
 
 
     #[ORM\ManyToMany(targetEntity: Prestataire::class, mappedBy: 'internaute')]
     private Collection $prestataires;
 
-    #[ORM\OneToOne(mappedBy: 'internauteId', cascade: ['persist', 'remove'])]
-    private ?Position $position = null;
+    #[ORM\OneToMany(mappedBy: 'internaute', targetEntity: Position::class)]
+    private Collection $position;
+
+    #[ORM\ManyToMany(targetEntity: Prestataire::class, inversedBy: 'internautesFavoris')]
+    private Collection $prestatairesFavoris;
+
 
     public function __construct()
     {
         $this->abus = new ArrayCollection();
         $this->commentaire = new ArrayCollection();
-        $this->bloc = new ArrayCollection();
         $this->prestataires = new ArrayCollection();
+        $this->position = new ArrayCollection();
+        $this->prestatairesFavoris = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -162,49 +165,56 @@ class Internaute extends User
     }
 
     /**
-     * @return Collection<int, Bloc>
+     * @return Collection<int, Position>
      */
-    public function getBloc(): Collection
-    {
-        return $this->bloc;
-    }
-
-    public function addBloc(Bloc $bloc): static
-    {
-        if (!$this->bloc->contains($bloc)) {
-            $this->bloc->add($bloc);
-        }
-
-        return $this;
-    }
-
-    public function removeBloc(Bloc $bloc): static
-    {
-        $this->bloc->removeElement($bloc);
-
-        return $this;
-    }
-
-    public function getPosition(): ?Position
+    public function getPosition(): Collection
     {
         return $this->position;
     }
 
-    public function setPosition(?Position $position): static
+    public function addPosition(Position $position): static
     {
-        // unset the owning side of the relation if necessary
-        if ($position === null && $this->position !== null) {
-            $this->position->setInternauteId(null);
+        if (!$this->position->contains($position)) {
+            $this->position->add($position);
+            $position->setInternaute($this);
         }
-
-        // set the owning side of the relation if necessary
-        if ($position !== null && $position->getInternauteId() !== $this) {
-            $position->setInternauteId($this);
-        }
-
-        $this->position = $position;
 
         return $this;
     }
 
+    public function removePosition(Position $position): static
+    {
+        if ($this->position->removeElement($position)) {
+            // set the owning side to null (unless already changed)
+            if ($position->getInternaute() === $this) {
+                $position->setInternaute(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prestataire>
+     */
+    public function getPrestatairesFavoris(): Collection
+    {
+        return $this->prestatairesFavoris;
+    }
+
+    public function addPrestatairesFavori(Prestataire $prestatairesFavori): static
+    {
+        if (!$this->prestatairesFavoris->contains($prestatairesFavori)) {
+            $this->prestatairesFavoris->add($prestatairesFavori);
+        }
+
+        return $this;
+    }
+
+    public function removePrestatairesFavori(Prestataire $prestatairesFavori): static
+    {
+        $this->prestatairesFavoris->removeElement($prestatairesFavori);
+
+        return $this;
+    }
 }
