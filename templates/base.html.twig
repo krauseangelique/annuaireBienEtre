@@ -2,6 +2,9 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+
 		<title>
 			{% block title %}Welcome!
 			{% endblock %}
@@ -19,13 +22,51 @@
 		{% endblock %}
 	</head>
 	<body>
-		{% block body %}{% endblock %}
+
 		{% block header %}
-			<header>
+			<header class="container-fluid">
 				<p>mon header</p>
 			</header>
+
 		{% endblock %}
+		<main class="container">
+			<div class="row justify-content-around">
+				<div class="col-6"> {% block body %}{% endblock %}
+					{% block recherche %}
+						<form class="global me-4" method="POST">Rechercher nos services
+						</form>
+					{% endblock %}
+				</div>
+				<div class="col-4">
+					{% block slider %}
+						<p>le slider</p>
+					{% endblock %}
+
+				</div>
+
+			</main>
+
+			{% block footer %}
+
+				<footer
+					class="col d-flex  justify-content-between flex-wrap px-4">
 
 
+					{# le nom du site #}
+					<p>Annuaire Bien être</p>
+					<nav class="d-flex   flex-row justify-content-between">
+
+
+						<a href="#" class="me-3   ">A propos</a>
+						<a href="#" class="me-3   ">Contact</a>
+						<a href="#" class="me-3   ">Newsletter</a>
+
+					</nav>
+					<div></div>
+				</footer>
+
+
+			{% endblock %}
+		</body>
 	</body>
 </html>

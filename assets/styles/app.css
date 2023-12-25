@@ -1,3 +1,28 @@
 body {
-    background-color: skyblue;
+    background-color: #e52f58;
+    color: #f9e8ab;
+}
+p{
+    color: #f4d76b;
+}
+footer{
+    border: 1px solid greenyellow;
+}
+.recherche{
+    background-color: #9800B0;
+    color:#F9E8AB;
+}
+
+h1,h2,h3{
+    color: #F9E8AB;
+}
+
+main{
+    border: 1px solid green;
+}
+form.global{
+    border: 1px solid #9800B0;
+    background-color: #9800B0;
+    border-radius: 5px;
+
 }
