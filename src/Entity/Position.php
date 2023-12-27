@@ -24,7 +24,7 @@ class Position
     private ?Internaute $internaute = null;
 
     #[ORM\ManyToOne(inversedBy: 'position')]
-    private ?Bloc $blocPosition = null;
+    private ?Bloc $blocPosition = null; // Attention: relation Internaute-position-bloc fausse dans le schéma de BD ! La relation correcte est Internaute -1----*-Position-*-----1-Bloc
 
     public function getId(): ?int
     {
