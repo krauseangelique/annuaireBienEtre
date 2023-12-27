@@ -11,7 +11,7 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 #[ORM\Entity(repositoryClass: PrestataireRepository::class)]
 #[Broadcast]
 
-abstract class Prestataire extends User
+class Prestataire extends User
 {
 
     #[ORM\Column(length: 255, nullable: true)]

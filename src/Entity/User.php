@@ -18,7 +18,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[DiscriminatorMap(["user" => "User", "internaute" => "Internaute"])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType('JOINED')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+
+abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -30,8 +30,6 @@ class Internaute extends User
     #[ORM\OneToOne(inversedBy: 'internaute', cascade: ['persist', 'remove'])]
     private ?Image $image = null;
 
-
-
     #[ORM\ManyToMany(targetEntity: Prestataire::class, mappedBy: 'internaute')]
     private Collection $prestataires;
 
@@ -39,7 +37,8 @@ class Internaute extends User
     private Collection $position;
 
     #[ORM\ManyToMany(targetEntity: Prestataire::class, inversedBy: 'internautesFavoris')]
-    private Collection $prestatairesFavoris;
+    private Collection $prestatairesFavoris; // sur le MPD(Tables) c'est  Favoris ??
+
 
 
     public function __construct()
