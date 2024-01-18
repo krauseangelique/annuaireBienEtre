@@ -1,3 +1,4 @@
 framework:
     mailer:
+    # Paramétrage de mailer
         dsn: '%env(MAILER_DSN)%'

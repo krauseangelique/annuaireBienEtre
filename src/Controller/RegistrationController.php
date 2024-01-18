@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+
 use App\Entity\Prestataire;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
+use ContainerR2ZVbuO\getDataCollector_Request_SessionCollectorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,9 +32,12 @@ class RegistrationController extends AbstractController
     {
         $prestataire = new Prestataire();
         $form = $this->createForm(RegistrationFormType::class, $prestataire);
+
+        // récupère les informations du formulaire envoyé
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             // encode the plain password
             $prestataire->setPassword(
                 $userPasswordHasher->hashPassword(
@@ -41,18 +45,27 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            // dd($form);
+             // encode the email
+            $prestataire->setEmail(
+                $form->get('email')->getData()
+                )
+            ;
 
-            // Ne pas mettre en DB PERSIST ET FLUSH
-            $entityManager->persist($prestataire);
-            $entityManager->flush();
 
-            // generate a signed url and email it to the user
+            // Ne pas mettre en DB la première partie de l'inscription  PERSIST ET FLUSH
+            // $entityManager->persist($prestataire);
+            // $entityManager->flush();
+
+            // generate a signed url and email it to the user Prestataire
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $prestataire,
                 (new TemplatedEmail())
                     ->from(new Address('mailer@your-domain.com', 'Bien Etre'))
                     ->to($prestataire->getEmail())
+
                     // Editer en français
-                    ->subject('Please Confirm your Email')
+                    // ->subject('Please Confirm your Email')
+                    ->subject('Pouvez vous confirmer votre adresse mail ?')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
             // do anything else you need here, like send an email
@@ -74,6 +87,8 @@ class RegistrationController extends AbstractController
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+        
+        
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 

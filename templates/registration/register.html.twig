@@ -6,18 +6,23 @@
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
+    <div class="container d-flex  justify-content-center">
+        <h1>Register</h1>
+        </div>
+<div class="container d-flex  justify-content-center">
+        {{ form_errors(registrationForm) }}
 
-    <h1>Register</h1>
+        {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Password'
+            }) }}
+            {{ form_row(registrationForm.agreeTerms) }}
 
-    {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+            <p>Après enregistrement de votre email, vous recevrez un message pour valider votre inscription en tant que PRESTATAIRE dans notre annuaire.</p>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            {# <button type="submit" class="btn">Register</button> #}
+        {{ form_end(registrationForm) }}
+    </div>
 {% endblock %}

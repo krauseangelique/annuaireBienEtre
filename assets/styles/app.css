@@ -24,5 +24,23 @@ form.global{
     border: 1px solid #9800B0;
     background-color: #9800B0;
     border-radius: 5px;
+}
+.bold{
+    font-weight: 700;
+}
+.btn-primary{
+    background-color: #9800B0;
+    border-color: #9800B0;
+}
+.btn-primary:hover{
+    background-color : #800080;
+    border-color: #800080;
+}
 
+.icone{
+    color: #f4d76b;
+}
+a{
+    text-decoration: none;
+    color: inherit;
 }

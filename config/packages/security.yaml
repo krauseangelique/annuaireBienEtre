@@ -8,6 +8,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
+                # class: App\Entity\Prestataire
                 property: email
     firewalls:
         dev:
