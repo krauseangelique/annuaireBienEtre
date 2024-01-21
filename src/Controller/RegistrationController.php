@@ -6,14 +6,12 @@ namespace App\Controller;
 use App\Entity\Prestataire;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
-use ContainerR2ZVbuO\getDataCollector_Request_SessionCollectorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -28,7 +26,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, EntityManagerInterface $entityManager): Response
     {
         $prestataire = new Prestataire();
         $form = $this->createForm(RegistrationFormType::class, $prestataire);
@@ -38,15 +36,8 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // encode the plain password
-            $prestataire->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $prestataire,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-            // dd($form);
-             // encode the email
+        
+             // encode the email (Ce que l'utilisateur a rempli comme champs)
             $prestataire->setEmail(
                 $form->get('email')->getData()
                 )
@@ -73,6 +64,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
+
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
@@ -82,11 +74,26 @@ class RegistrationController extends AbstractController
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+       // On est pas dans le cas d'élévation des droits
+       // $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        // Comment récupérer l'information dans une URL    
+        //dump($request->query->get('email'));
+        // dd($request);
+        $email = $request->query->get('email');
+
+        // Création d'un prestataire
+        $prestataire = new Prestataire;
+
+        // Les infos de mon prestataire (formulaire1)
+        $prestataire -> setEmail($email);
+        $prestataire -> setIsVerified(true);
+        $prestataire -> setRoles(['ROLE_PRESTATAIRE']);
+        $prestataire -> setTypeUtilisateur('prestataire');
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+        
+            $this->emailVerifier->handleEmailConfirmation($request, $prestataire);
         
         
         } catch (VerifyEmailExceptionInterface $exception) {
@@ -96,8 +103,8 @@ class RegistrationController extends AbstractController
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', 'Votre adresse mail a bien été vérifiée');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_home');
     }
 }

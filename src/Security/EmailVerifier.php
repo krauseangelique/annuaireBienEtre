@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
+
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
@@ -23,11 +24,13 @@ class EmailVerifier
     {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
-            // $user->getId(), ===> le getId() est null or il faut un string d'id donc on met la valeur 0 à la place !
+            //$user->getId(), 
+            //===> le getId() est null or il faut un string d'id donc si on met la valeur 0 à la place ?
             0,
-            $user->getEmail()
+            $user->getEmail(),
             
-
+            ['email' => $user->getEmail(),] // add the user's email as an extra query param
+            
         );
 
         $context = $email->getContext();
@@ -46,7 +49,7 @@ class EmailVerifier
 
     public function handleEmailConfirmation(Request $request, User $user): void
     {
-        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
+        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), 0, $user->getEmail());
 
 
         $user->setIsVerified(true);
