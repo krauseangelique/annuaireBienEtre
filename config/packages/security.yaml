@@ -20,10 +20,10 @@ security:
             # https://stackoverflow.com/questions/62823232/symfony-5-keeps-redirecting-from-the-register-route
             provider: app_user_provider
             # https://symfony.com/doc/current/security/access_denied_handler.html
-            entry_point: App\Security\AuthenticationEntryPoint
+            # entry_point: App\Security\AuthenticationEntryPoint
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall custom_authenticator représente le nom de notre authenticator min 3:14
-            custom_authenticator: App\Security\UsersAuthenticator
+            # custom_authenticator: App\Security\UsersAuthenticator
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
             form_login:

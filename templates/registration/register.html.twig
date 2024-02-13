@@ -3,8 +3,12 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
+    {# message flash #}
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    {% for flash_success in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flash_success }}</div>
     {% endfor %}
     <div class="container d-flex  justify-content-center">
         <h1>Register</h1>
@@ -21,6 +25,8 @@
 
 
             <p>Après enregistrement de votre email, vous recevrez un message pour valider votre inscription en tant que PRESTATAIRE dans notre annuaire.</p>
+
+
 
             {# <button type="submit" class="btn">Register</button> #}
         {{ form_end(registrationForm) }}

@@ -1,0 +1,22 @@
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulaire de finalisation d'inscription
+{% endblock %}
+
+{% block body %}
+	
+	<div class="example-wrapper">
+		<h1> Finalisation de l'inscription</h1>
+
+	</div>
+	<h2>Votre inscription</h2>
+	
+	{# form(form_view, variables) #}
+{# Renders the HTML of a complete form. #}
+{# render the form and change the submission method #}
+{{ form(registrationForm) }}
+{# il faudra remplacer le form par form start et form widget avec le nom du champ (des champs que je désire afficher 1 widget par champ) form end #}
+
+{% endblock %} 
