@@ -1,22 +1,109 @@
-
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Formulaire de finalisation d'inscription
 {% endblock %}
 
 {% block body %}
-	
+
 	<div class="example-wrapper">
-		<h1> Finalisation de l'inscription</h1>
+		<h1>
+			Finalisation de l'inscription</h1>
 
 	</div>
-	<h2>Votre inscription</h2>
-	
-	{# form(form_view, variables) #}
-{# Renders the HTML of a complete form. #}
-{# render the form and change the submission method #}
-{{ form(registrationForm) }}
-{# il faudra remplacer le form par form start et form widget avec le nom du champ (des champs que je désire afficher 1 widget par champ) form end #}
 
-{% endblock %} 
+	<h2>Votre inscription en tant que PRESTATAIRE</h2>
+
+	{# form(form_view, variables) #}
+	{# Renders the HTML of a complete form. #}
+	{# render the form and change the submission method #}
+
+	{# {{ form(registrationForm) }} #}
+
+	{# il faudra remplacer le form par form start et form widget avec le nom du champ (des champs que je désire afficher 1 widget par champ) form end #}
+	{# <form start action="{{ path('votre_route_de_soumission_du_formulaire') }}" method="post" class="mx-auto"> #}
+		{# <form start action="{{ path(registrationForm)}}" method="post" class="mx-auto text-center" name="prestataire"> <div id="prestataire"> 
+		https://symfony.com/doc/current/form/form_customization.html#form-end-form-view-variables #}
+		<div class="container">
+		{{ form_start(registrationForm, {'method': 'POST'})}}
+			{{ form_errors(registrationForm)}}
+			<div class="form-group">
+				{{ form_label(registrationForm.nom) }}
+				{{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.nom) }}
+			</div>
+			
+			{# 
+				<input type="password" id="prestataire_plainPassword" name="prestataire[plainPassword]" required="required" autocomplete="new-password" class="form-control">
+				nom required
+				numTel required="false"
+				siteInternet required="false" inputmode="url"
+				TVA maxlength = 13
+				categorieServices required="false" multiple="true", choice_label="id" menu déroulant
+				adresseProvince class="Province", choice_label="id" required
+				adresseCP,choice_label="id", required="false"
+				adresseRue required="false"
+				adresseNum required="false"
+			#}
+				
+			
+			<div class="form-group">
+				{{ form_label(registrationForm.plainPassword) }}
+				{{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.plainPassword) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(registrationForm.numTel) }}
+				{{ form_widget(registrationForm.numTel, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.numTel) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(registrationForm.siteInternet) }}
+				{{ form_widget(registrationForm.siteInternet, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.siteInternet) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(registrationForm.numTVA) }}
+				{{ form_widget(registrationForm.numTVA, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.numTVA) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(registrationForm.categorieServices) }}
+				{{ form_widget(registrationForm.categorieServices, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.categorieServices) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(registrationForm.adresseProvince) }}
+				{{ form_widget(registrationForm.adresseProvince, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.adresseProvince) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(registrationForm.adresseCP) }}
+				{{ form_widget(registrationForm.adresseCP, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.adresseCP) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(registrationForm.commune) }}
+				{{ form_widget(registrationForm.commune, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.commune) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(registrationForm.adresseRue) }}
+				{{ form_widget(registrationForm.adresseRue, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.adresseRue) }}
+			</div>
+			<div class="form-group">
+				{{ form_label(registrationForm.adresseNum) }}
+				{{ form_widget(registrationForm.adresseNum, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.adresseNum) }}
+			</div>
+			{# 
+				<button type="submit" id="prestataire_Sauvegarder" name="prestataire[Sauvegarder]" class="btn-primary btn">Enregistrer vos données pour finaliser votre inscription</button>
+			#}
+			{# Fin du formulaire #}
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary">Soumettre</button>
+			</div>
+		</div>
+	{{ form_end(registrationForm)}}
+	</div>
+{% endblock %}

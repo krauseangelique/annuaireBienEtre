@@ -70,7 +70,7 @@ class PrestataireType extends AbstractType
             ->add('numTel', TelType::class, [
                 'required' => false,
             ])
-            ->add('numTVA')
+            ->add('numTVA', TextType::class)
             ->add('adresseCP', EntityType::class, [
                 'class' => CodePostal::class,
 'choice_label' => 'id',
@@ -89,13 +89,14 @@ class PrestataireType extends AbstractType
                 'class' => CategorieServices::class,
 'choice_label' => 'id',
 'multiple' => true,
-            ])
-            ->add('internautesFavoris', EntityType::class, [
-                'class' => Internaute::class,
-'choice_label' => 'id',
-'multiple' => true,
 'required' => false,
             ])
+//             ->add('internautesFavoris', EntityType::class, [
+//                 'class' => Internaute::class,
+// 'choice_label' => 'id',
+// 'multiple' => true,
+// 'required' => false,
+//             ])
             // Valider le formulaire
             ->add('Sauvegarder', SubmitType::class, ['label' => 'Enregistrer vos données pour finaliser votre inscription'])
         ;

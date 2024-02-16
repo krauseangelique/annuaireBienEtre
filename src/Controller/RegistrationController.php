@@ -21,6 +21,7 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
+    // 1. Vérification du mail introduit par le prestataire
     private EmailVerifier $emailVerifier;
 
     public function __construct(EmailVerifier $emailVerifier)
@@ -32,6 +33,7 @@ class RegistrationController extends AbstractController
     /**
      *  cf. Lior
      */
+    // 2. Faire appel à la request
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -40,7 +42,7 @@ class RegistrationController extends AbstractController
         // 3. lier le formulaire au controller dans lequel on se trouve
         $form = $this->createForm(RegistrationFormType::class, $prestataire);
 
-        // récupère les informations du formulaire envoyé
+        // 4. récupèrer les informations du formulaire envoyé
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && !$form->isValid()) {
@@ -77,9 +79,10 @@ class RegistrationController extends AbstractController
             //  }
 
             $contenuMail = $form->get('email')->getData();
+        
             $repository = $entityManager->getRepository(User::class);
 
-            $isMail = $repository->findOneBy(['email' => $contenuMail]);
+            $isMail = $repository->findOneBy(['email' => $contenuMail] );
 
         
 
@@ -130,6 +133,7 @@ class RegistrationController extends AbstractController
     }
 
     /* 2ième partie de l'inscription */
+    // 1. Vérifier l'émail
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
@@ -158,35 +162,62 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
 
         } else {
-            
+            // Gtion de la confirmation du mail
             $this->emailVerifier->handleEmailConfirmation($request, $prestataire);
         
         }
 
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-
+        
             return $this->redirectToRoute('app_register');
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Votre adresse mail a bien été vérifiée');
 
-        return $this->redirectToRoute('app_home');
+        //
+        // $this->getUser();
+        //dump( $this->getUser());
+        //die();
+        
+       // return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_inscription', ['id'=>$prestataire->getId()]);
     }
 
 // partie 3 : Finalisation de l'inscription PRESTATAIRE
-    #[Route('/inscription', name: 'app_inscription')]
-    public function inscription(Request $request): Response
+    //https://symfony.com/doc/current/routing.html#parameters-validation  int $id il passe bien : https://localhost:8000/inscription/28
+    #[Route('/inscription/{id}', name: 'app_inscription')] 
+    public function inscription(Request $request, int $id, EntityManagerInterface $entityManager): Response
     {
-         // Les infos de mon prestataire (formulaire2)
-        // récupération d'1 prestataire pré-inscrit via son mail
+        // dump($request->query->all());
+        // die();
+        //$prestataireId = $request->query->get('id');
+
+        // dump( $this->getUser());
+        // die(); cf . ligne 61 et suivante
+
+        // Récupération de l'id 
+        $userRepository = $entityManager->getRepository(User::class);
+        $prestataireInscrit = $userRepository->findOneBy(['id' => $id]); // l'id passe https://localhost:8000/inscription/28
+
+        //$prestataireInscrit = new Prestataire; // On ne traite pas un nouveau prestataire mais un prestataire dont l'émail est déjà inscrit dans la DB
+          // Les infos de mon prestataire (formulaire2)
+        // récupération d'1 prestataire pré-inscrit via son mail, id
        // $prestataireInscrit = $this->userRepository->findOneByUser($email);
 
-        $prestataireInscrit = new Prestataire;
-        
+        // a) ! chercher comment passer l'info prestataire située dans la méthode verifyUserEmail dans la méthode inscription V
 
-         // 3. lier le formulaire au controller dans lequel on se trouve
+        // b) ! selon la méthode trouvée pour y arriver, il faudra aller chercher en DB les informations du prestataire qui s'est inscrit précédemment
+
+
+        
+//          $repository = $entityManager->getRepository(User::class);
+// // chercher comment pousser (push) les infos en DB 
+
+
+
+
         $form = $this->createForm(PrestataireType::class, $prestataireInscrit);
 
 
@@ -212,11 +243,17 @@ class RegistrationController extends AbstractController
                 // $form->getData() holds the submitted values
                 // but, the original `$task` variable has also been updated
                 $task = $form->getData();
-    
-                dump("coucou");
-                dd($task);
+                // Yes il tombe dans le dump and dd($task)
+                // dump("coucou");
+                // dd($task);
+
                 // ... perform some action, such as saving the task to the database
-    
+                // persist et flush le prestataire
+                
+                $entityManager->persist($prestataireInscrit);
+                $entityManager->flush();
+
+                // Unable to generate a URL for the named route "task_success" as such route does not exist.
                 return $this->redirectToRoute('task_success');
             }
 

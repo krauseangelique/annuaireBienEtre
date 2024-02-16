@@ -17,6 +17,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Twig\Sandbox\SecurityError;
 
 class UsersAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -25,6 +26,7 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
 
     // app_login sera le nom de la route qui va permettre de créer son LOGIN
     public const LOGIN_ROUTE =  'app_login';
+
     // pour créer des générateurs d'URL min 6:50 https://www.youtube.com/watch?v=INfHFDIjgrw&t=4s
     private UrlGeneratorInterface $urlGenerator;
 
@@ -35,7 +37,7 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
 
 
     /* CREATION DE L'AUTHENTIFICATION */
-      // Passport est un nouvel élément de Symfony généré par authenticate qui permet de gérer l'authentification des utilisateurs
+      // Passport est un nouvel élément de Symfony (depuis la 5.3) généré par authenticate qui permet de gérer l'authentification des utilisateurs
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
@@ -48,7 +50,7 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
             // le UserBadge va permettre d'aller rechercher l'utilisateur ici par son email
             new UserBadge($email),
 
-            // va récupérer le mot de passe tapé par l'utilisateur 
+            // va récupérer le mot de passe tapé par l'utilisateur => credentials = identifiants
             new PasswordCredentials($request->request->get('password', '')),
             [
                 // jeton token de sécurité qui authentifie que le formulaire vient bien de notre application (site)
@@ -66,7 +68,7 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example: ma route pour le HomeController app_home
-        // je vais rediriger mon utilisateur vers home
+        // je vais rediriger mon utilisateur vers home (main dans la vidéo min 10:30)
         // return new RedirectResponse($this->urlGenerator->generate('some_route'));
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);

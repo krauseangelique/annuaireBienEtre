@@ -15,11 +15,12 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // permet de rediriger un utilisateur qui aurait déjà une connection, vers la route de son compte
-        // if($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        // https://nouvelle-techno.fr/articles/5-inscription-et-authentification-des-utilisateurs-symfony-6
+        if($this->getUser()) {
+            return $this->redirectToRoute('target_path');
+        }
 
-        // get the login error if there is one
+        // get the login error if there is one min 5:06
         $error = $authenticationUtils->getLastAuthenticationError();
 
         // // last email entered by the user
