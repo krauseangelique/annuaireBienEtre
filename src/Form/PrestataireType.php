@@ -34,6 +34,7 @@ class PrestataireType extends AbstractType
             //->add('email', EmailType::class)
            // ->add('roles') // permet de connaitre le rôle dont l'user fait l'objet concernant les permissions qu'il possède 
             // ->add('password')
+
             ->add('plainPassword', PasswordType::class, [
                                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -82,13 +83,14 @@ class PrestataireType extends AbstractType
             ])
             ->add('commune', EntityType::class, [
                 'class' => Commune::class,
-'choice_label' => 'id',
+'choice_label' => 'nom',
 'required' => false,
             ])
             ->add('categorieServices', EntityType::class, [
                 'class' => CategorieServices::class,
-'choice_label' => 'id',
+'choice_label' => 'nom',
 'multiple' => true,
+'expanded' => true,
 'required' => false,
             ])
 //             ->add('internautesFavoris', EntityType::class, [
@@ -98,7 +100,7 @@ class PrestataireType extends AbstractType
 // 'required' => false,
 //             ])
             // Valider le formulaire
-            ->add('Sauvegarder', SubmitType::class, ['label' => 'Enregistrer vos données pour finaliser votre inscription'])
+            // ->add('Sauvegarder', SubmitType::class, ['label' => 'Enregistrer vos données pour finaliser votre inscription'])
         ;
     }
     // La deuxième méthode (configureOptions) va au fait nous permettre d'explicitement définir la classe à la qu'elle est rattachée ce formulaire.

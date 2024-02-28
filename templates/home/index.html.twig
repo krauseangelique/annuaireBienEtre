@@ -1,12 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Annuaire bien-être
+{% block title %}Home - Annuaire bien-être
 {% endblock %}
 
 {% block content %}
-	<h1>Annuaire Bien Etre</h1>
-	<p>Bienvenu sur le site <span class='bold'>Annuaire Bien Etre</span></p>
-	<p>Ce site est dédié aux commerçants désireux de promouvoir leurs services sur cette plateForme.<br> Vous pourrez vous inscrire en créant un compte PRESTATAIRE.</p>
-	<p>En tant qu'internaute, vous retrouverez au même endrois une multitude de services et de prestataires dédiés au  'bien être'.<br>
-	N'hésitez pas à faire votre choix parmis nos diverses catégories de services.</p>
+	<h1>Annuaire Bien-Etre</h1>
+	<p>Bienvenu sur le site
+		<span class='bold'>Annuaire Bien-Etre</span>
+	</p>
+	<p>Ce site est dédié aux commerçants désireux de promouvoir leurs services sur cette plateForme.<br>
+		Vous pourrez vous inscrire en créant un compte PRESTATAIRE.</p>
+	<p>En tant qu'internaute, vous retrouverez au même endrois une multitude de services et de prestataires dédiés au  'bien-être'.<br>
+		N'hésitez pas à faire votre choix parmis nos diverses catégories de services.</p>
+	<h2>Nos 4 derniers prestataires de services inscrits : </h2>
+	<div>
+		<form class="global me-4 ps-1" method="POST">
+
+			{# <select class="beau" name="categorieDeService" multiple> #}
+			<select class="beau" name="prestataire4Liste" multiple>
+				{% for prestataire in prestataires %}
+					<option value="valeur1">{{ prestataire.nom }}</option>
+					<option value="valeur2">{{ prestataire.email }}</option>
+					<option value="valeur">id : {{ prestataire.id }}</option>
+
+				{% endfor %}
+				<!-- Ajoutez d'autres options si nécessaire -->
+			</select>
+
+		</form>
+	</div>
+	
 {% endblock %}

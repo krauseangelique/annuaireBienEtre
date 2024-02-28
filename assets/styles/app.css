@@ -2,6 +2,15 @@ body {
     background-color: #e52f58;
     color: #f9e8ab;
 }
+
+*,
+*::before,
+*::after {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
 p{
     color: #f4d76b;
 }
@@ -17,6 +26,7 @@ h1,h2,h3{
     color: #F9E8AB;
 }
 
+/* TODO enlever la bordure AVANT de rendre le travail */
 main{
     border: 1px solid green;
 }
@@ -43,4 +53,64 @@ form.global{
 a{
     text-decoration: none;
     color: inherit;
+}
+
+/* Accordéon  
+recherche fermée ►
+recherche ouverte ▼
+https://freefrontend.com/css-accordions/
+ */
+.beau{
+    width: 98%;
+}
+
+.page__wrapper {
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: "Syne Mono";
+	flex-direction: column;
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+.accordion {
+	max-width: 500px;
+	width: calc(100% - 20px);
+    margin-top: 1rem;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    padding-top: 1rem;
+    padding-left: 1.5rem;
+    padding-right: 1rem;
+
+}
+.accordion li{
+    padding-left: 1rem;
+}
+details {
+	background-color: #9800B0;
+	margin-bottom: 10px;
+    border: 1px solid 999;
+	filter: drop-shadow(2px 2px 5px #9800B0);
+    /* box-shadow: 2px 2px 5px #ccc; */
+}
+details:hover {
+	filter: drop-shadow(5px 5px 4px #0A0A0A);
+}
+details > summary {
+	color: #f4de64;
+	padding: 5px 15px;
+	font-size: 1em;
+	cursor: pointer;
+}
+details > p {
+	padding: 5px 10px 10px 20px;
+	color: #ddd;
+	font-size: 1.1em;
+}
+
+.border-solid{
+    border: 1px solid orange;
 }

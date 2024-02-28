@@ -21,19 +21,20 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('email', EmailType::class)
 
+
+
             ->add('agreeTerms', CheckboxType::class, [
-                                'mapped' => false,
+                'mapped' => false,
                 'constraints' => [
                     new IsTrue([
                         'message' => 'Vous devez accepter nos termes et conditions',
                     ]),
                 ],
             ])
-            
+
 
             // Valider l'email
-            ->add('Valider', SubmitType::class)
-        ;
+            ->add('Valider', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

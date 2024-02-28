@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
-
+use App\Entity\CategorieServices;
 use App\Entity\Prestataire;
 use App\Entity\User;
 use App\Form\PrestataireType;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -126,8 +127,15 @@ class RegistrationController extends AbstractController
 
         }
 
+        // je récupère les données catégories de ma DB
+        $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
+
+        // tableau des catégories
+        $categories = $repositoryCategory->findAll();
+
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'categories' => $categories,
         ]);
 
     }
@@ -151,10 +159,13 @@ class RegistrationController extends AbstractController
         $prestataire->setIsVerified(true);
         $prestataire->setRoles(['ROLE_PRESTATAIRE']);
         $prestataire->setTypeUtilisateur('prestataire');
+    
+        $prestataire->setInscription(new DateTime());
+        // !!! setInscription pour pouvoir récupérer la date de l'inscription ainsi le prestataire sera inscrit à la date du jour
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
-           // !! Si l'email a déjà été soumis (l'email est en DB) alors envoyer un message flash vous avez déjà confirmé votre email pour votre inscription 
+           // !!! Si l'email a déjà été soumis (l'email est en DB) alors envoyer un message flash vous avez déjà confirmé votre email pour votre inscription 
 
         if ($prestataire->isVerified()!== true) {
 
@@ -162,7 +173,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
 
         } else {
-            // Gtion de la confirmation du mail
+            // Gestion de la confirmation du mail
             $this->emailVerifier->handleEmailConfirmation($request, $prestataire);
         
         }
@@ -181,8 +192,14 @@ class RegistrationController extends AbstractController
         //dump( $this->getUser());
         //die();
         
+
+        
+
        // return $this->redirectToRoute('app_home');
-        return $this->redirectToRoute('app_inscription', ['id'=>$prestataire->getId()]);
+        return $this->redirectToRoute('app_inscription', [
+            'id'=>$prestataire->getId(),
+        
+        ]);
     }
 
 // partie 3 : Finalisation de l'inscription PRESTATAIRE
@@ -227,6 +244,11 @@ class RegistrationController extends AbstractController
         Symfony recommande de mettre le moins de logique possible dans les contrôleurs. C’est pourquoi il est préférable de déplacer les formulaires complexes vers des classes dédiées plutôt que de les définir dans les actions du contrôleur. De plus, les formulaires définis dans des classes peuvent être réutilisés dans plusieurs actions et services
 
         */
+         // je récupère les données catégories de ma DB
+        $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
+
+         // tableau des catégories
+        $categories = $repositoryCategory->findAll();
     
             // $prestataire->setAdresseNum($adresseNum);
             // $formInscription = $this->createFormBuilder(); // // hash du mot de passe
@@ -253,14 +275,16 @@ class RegistrationController extends AbstractController
                 $entityManager->persist($prestataireInscrit);
                 $entityManager->flush();
 
-                // Unable to generate a URL for the named route "task_success" as such route does not exist.
-                return $this->redirectToRoute('task_success');
+                $this->addFlash('success', 'Votre inscription comme PRESTATAIRE est bien validée !');
+            
+                return $this->redirectToRoute('app_home', ['id'=>$prestataireInscrit->getId()]);
             }
 
 
             // 5.retourner une vue, un fichier TWIG
             return $this->render('registration/inscription.html.twig', [
                 'registrationForm' => $form->createView(),
+                'categories' => $categories,
             ]);
 
     

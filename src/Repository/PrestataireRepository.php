@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Prestataire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Console\Descriptor\Descriptor;
 
 /**
  * @extends ServiceEntityRepository<Prestataire>
@@ -19,6 +20,17 @@ class PrestataireRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Prestataire::class);
+    }
+
+    public function findBy4End(): array
+    {
+        // récupération des 4 derniers prestataires inscrits
+        return $this->createQueryBuilder('p')
+        ->orderBy('p.inscription', 'DESC')
+        ->setMaxResults(4)
+        ->getQuery()
+        ->getResult()
+        ;
     }
 
 //    /**
