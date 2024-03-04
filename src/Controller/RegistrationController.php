@@ -80,12 +80,12 @@ class RegistrationController extends AbstractController
             //  }
 
             $contenuMail = $form->get('email')->getData();
-        
+
             $repository = $entityManager->getRepository(User::class);
 
-            $isMail = $repository->findOneBy(['email' => $contenuMail] );
+            $isMail = $repository->findOneBy(['email' => $contenuMail]);
 
-        
+
 
             if ($isMail === null) {
                 # code...
@@ -104,7 +104,7 @@ class RegistrationController extends AbstractController
                 );
 
 
-               // $entityManager->persist($prestataire);
+                // $entityManager->persist($prestataire);
                 // $entityManager->flush(); à remplacer par handleEmailConfirmation en 2ème partie
 
                 // Après envoie de l'email à la personne qui souhaite s'inscrire
@@ -114,7 +114,6 @@ class RegistrationController extends AbstractController
                 // do anything else you need here, like send an email
 
                 return $this->redirectToRoute('app_register');
-
             }
             // } else {
             //     dd("c'est quoi ça !");
@@ -137,7 +136,6 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form->createView(),
             'categories' => $categories,
         ]);
-
     }
 
     /* 2ième partie de l'inscription */
@@ -159,28 +157,25 @@ class RegistrationController extends AbstractController
         $prestataire->setIsVerified(true);
         $prestataire->setRoles(['ROLE_PRESTATAIRE']);
         $prestataire->setTypeUtilisateur('prestataire');
-    
+
         $prestataire->setInscription(new DateTime());
         // !!! setInscription pour pouvoir récupérer la date de l'inscription ainsi le prestataire sera inscrit à la date du jour
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
-           // !!! Si l'email a déjà été soumis (l'email est en DB) alors envoyer un message flash vous avez déjà confirmé votre email pour votre inscription 
+            // !!! Si l'email a déjà été soumis (l'email est en DB) alors envoyer un message flash vous avez déjà confirmé votre email pour votre inscription 
 
-        if ($prestataire->isVerified()!== true) {
+            if ($prestataire->isVerified() !== true) {
 
-            $this->addFlash('verify_email_error', 'Vous avez déjà confimé votre inscription');
-            return $this->redirectToRoute('app_register');
-
-        } else {
-            // Gestion de la confirmation du mail
-            $this->emailVerifier->handleEmailConfirmation($request, $prestataire);
-        
-        }
-
+                $this->addFlash('verify_email_error', 'Vous avez déjà confimé votre inscription');
+                return $this->redirectToRoute('app_register');
+            } else {
+                // Gestion de la confirmation du mail
+                $this->emailVerifier->handleEmailConfirmation($request, $prestataire);
+            }
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-        
+
             return $this->redirectToRoute('app_register');
         }
 
@@ -191,50 +186,37 @@ class RegistrationController extends AbstractController
         // $this->getUser();
         //dump( $this->getUser());
         //die();
-        
 
-        
-
-       // return $this->redirectToRoute('app_home');
+        // return $this->redirectToRoute('app_home');
         return $this->redirectToRoute('app_inscription', [
-            'id'=>$prestataire->getId(),
-        
+            'id' => $prestataire->getId(),
+
         ]);
     }
 
-// partie 3 : Finalisation de l'inscription PRESTATAIRE
+
+
+    // partie 3 : Finalisation de l'inscription PRESTATAIRE
     //https://symfony.com/doc/current/routing.html#parameters-validation  int $id il passe bien : https://localhost:8000/inscription/28
-    #[Route('/inscription/{id}', name: 'app_inscription')] 
+    #[Route('/inscription/{id}', name: 'app_inscription')]
     public function inscription(Request $request, int $id, EntityManagerInterface $entityManager): Response
     {
-        // dump($request->query->all());
-        // die();
-        //$prestataireId = $request->query->get('id');
-
-        // dump( $this->getUser());
-        // die(); cf . ligne 61 et suivante
-
+    
         // Récupération de l'id 
         $userRepository = $entityManager->getRepository(User::class);
         $prestataireInscrit = $userRepository->findOneBy(['id' => $id]); // l'id passe https://localhost:8000/inscription/28
 
-        //$prestataireInscrit = new Prestataire; // On ne traite pas un nouveau prestataire mais un prestataire dont l'émail est déjà inscrit dans la DB
-          // Les infos de mon prestataire (formulaire2)
+        //$prestataireInscrit = new Prestataire; // On ne traite pas un nouveau prestataire MAIS un prestataire dont l'émail est déjà inscrit dans la DB
+        // Les infos de mon prestataire (formulaire2)
         // récupération d'1 prestataire pré-inscrit via son mail, id
-       // $prestataireInscrit = $this->userRepository->findOneByUser($email);
+        // $prestataireInscrit = $this->userRepository->findOneByUser($email);
 
-        // a) ! chercher comment passer l'info prestataire située dans la méthode verifyUserEmail dans la méthode inscription V
+        // a) chercher comment passer l'info prestataire située dans la méthode verifyUserEmail dans la méthode inscription V
+        // b) selon la méthode trouvée pour y arriver, il faudra aller chercher en DB les informations du prestataire qui s'est inscrit précédemment
+        //     $repository = $entityManager->getRepository(User::class);
+        // chercher comment pousser (push) les infos en DB 
 
-        // b) ! selon la méthode trouvée pour y arriver, il faudra aller chercher en DB les informations du prestataire qui s'est inscrit précédemment
-
-
-        
-//          $repository = $entityManager->getRepository(User::class);
-// // chercher comment pousser (push) les infos en DB 
-
-
-
-
+        /*FORMULAIRE */
         $form = $this->createForm(PrestataireType::class, $prestataireInscrit);
 
 
@@ -244,50 +226,73 @@ class RegistrationController extends AbstractController
         Symfony recommande de mettre le moins de logique possible dans les contrôleurs. C’est pourquoi il est préférable de déplacer les formulaires complexes vers des classes dédiées plutôt que de les définir dans les actions du contrôleur. De plus, les formulaires définis dans des classes peuvent être réutilisés dans plusieurs actions et services
 
         */
-         // je récupère les données catégories de ma DB
+
+        // je récupère les données catégories de ma DB
         $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
 
-         // tableau des catégories
+        // tableau des catégories
         $categories = $repositoryCategory->findAll();
-    
-            // $prestataire->setAdresseNum($adresseNum);
-            // $formInscription = $this->createFormBuilder(); // // hash du mot de passe
-            // $prestataire->setPassword(
+
+        // $prestataire->setAdresseNum($adresseNum);
+        // $formInscription = $this->createFormBuilder(); // // hash du mot de passe
+        // $prestataire->setPassword(
+        //     $prestatairePasswordHasher->hashPassword(
+        //     $prestataire,
+        //     $formInscription->get('plainPassword')->getData()
+        //     )
+        // );
+
+        // 4. Soumettre le formulaire
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $form->getData() holds the submitted values
+            // but, the original `$task` variable has also been updated
+            $task = $form->getData();
+            // Yes il tombe dans le dump and dd($task)
+            // dump("coucou");
+            // dd($task);
+
+            // ... perform some action, such as saving the task to the database
+            // persist et flush le prestataire
+
+        // aller chercher le champ dans le Form PrestataireType
+
+            $prestataire = $form->getData('plainPassword');
+        
+            
+            dump($request->request['prestataire[
+                "plainPassword"
+            ]']);
+        
+
+        dd($prestataire);
+
+        
+            // // hash du mot de passe
+            // $prestataireInscrit->setPassword(
             //     $prestatairePasswordHasher->hashPassword(
-            //     $prestataire,
-            //     $formInscription->get('plainPassword')->getData()
+            //         $prestataireInscrit,
+            //         $form->get('plainPassword')->getData()
             //     )
             // );
 
-            // 4. Soumettre le formulaire
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                // $form->getData() holds the submitted values
-                // but, the original `$task` variable has also been updated
-                $task = $form->getData();
-                // Yes il tombe dans le dump and dd($task)
-                // dump("coucou");
-                // dd($task);
-
-                // ... perform some action, such as saving the task to the database
-                // persist et flush le prestataire
-                
-                $entityManager->persist($prestataireInscrit);
-                $entityManager->flush();
-
-                $this->addFlash('success', 'Votre inscription comme PRESTATAIRE est bien validée !');
-            
-                return $this->redirectToRoute('app_home', ['id'=>$prestataireInscrit->getId()]);
-            }
+            $userRepository->upgradePassword($prestataireInscrit, $plainPassword);
 
 
-            // 5.retourner une vue, un fichier TWIG
-            return $this->render('registration/inscription.html.twig', [
-                'registrationForm' => $form->createView(),
-                'categories' => $categories,
-            ]);
+            $entityManager->persist($prestataireInscrit);
+            $entityManager->flush();
 
-    
+            $this->addFlash('success', 'Votre inscription comme PRESTATAIRE est bien validée !');
+
+            return $this->redirectToRoute('app_home', ['id' => $prestataireInscrit->getId()]);
+        }
+
+
+        // 5.retourner une vue, un fichier TWIG
+        return $this->render('registration/inscription.html.twig', [
+            'registrationForm' => $form->createView(),
+            'categories' => $categories,
+        ]);
     }
 }
 
