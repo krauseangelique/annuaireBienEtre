@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Prestataire;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -20,13 +22,14 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-// -> add('userType', ChoiceType::class, [
-//     'choices' =>[
-//         'Prestataire' => 'prestataire',
-//         'Internaute' => 'internaute',
-//         // 'expanded' => true Affiche sous forme de bouton radio
-//     ]
-// ])
+-> add('typeUtilisateur', ChoiceType::class, [
+    'choices' =>[
+        'Prestataire' => 'prestataire',
+        'Internaute' => 'internaute',
+        
+    ],
+    'expanded' => true, 
+])
 
 
             ->add('agreeTerms', CheckboxType::class, [
@@ -46,7 +49,7 @@ class RegistrationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Prestataire::class,
+            'data_class' => User::class,
         ]);
     }
 }

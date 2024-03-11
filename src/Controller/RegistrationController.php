@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\CategorieServices;
+use App\Entity\Internaute;
 use App\Entity\Prestataire;
 use App\Entity\User;
 use App\Form\PrestataireType;
@@ -34,11 +35,13 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = new User();
         $prestataire = new Prestataire();
+        $internaute = new Internaute();
 
         // 3. lier le formulaire au controller dans lequel on se trouve
-        $form = $this->createForm(RegistrationFormType::class, $prestataire);
-
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        
         // 4. récupèrer les informations du formulaire envoyé
         $form->handleRequest($request);
 
@@ -82,74 +85,102 @@ class RegistrationController extends AbstractController
             $isMail = $repository->findOneBy(['email' => $contenuMail]);
 
 
-
+            // Si l'email n'est pas en DB
             if ($isMail === null) {
                 // si je désire non pas Prestataire mais prestataire ou internaute alors : 
-                /*
+
                 // Récupération du type d'utilisateur choisi
-        $userType = $form->get('userType')->getData();
+                $typeUtilisateur = $form->get('typeUtilisateur')->getData();
 
-        // Vérification du type d'utilisateur
-        if ($userType === 'prestataire') {
-            // Traitement pour le cas où le prestataire est choisi
-            // Ici, vous pouvez envoyer un email de confirmation spécifique pour les prestataires, par exemple
-        } elseif ($userType === 'internaute') {
-            // Traitement pour le cas où l'internaute est choisi
-            // Ici, vous pouvez faire un traitement spécifique pour les internautes, par exemple
-        }
-à mettre dans registrationController dans la route register -> dans le if (mail === null)
+                // Vérification du type d'utilisateur
+                if ($typeUtilisateur === 'prestataire') {
+                    // Traitement pour le cas où le prestataire est choisi
+                    // Ici, vous pouvez envoyer un email de confirmation spécifique pour les prestataires, par exemple
 
-                */
-                # code...
-                // generate a signed url and email it to the user Prestataire 
-                //  https://github.com/Guichard-Gael/Tuto_mail_Symfony  
-                $this->emailVerifier->sendEmailConfirmation(
-                    'app_verify_email',
-                    $prestataire,
-                    (new TemplatedEmail())
-                        ->from(new Address('mailer@your-domain.com', 'Bien Etre'))
-                        ->to($prestataire->getEmail())
+                    # code...
+                    // generate a signed url and email it to the user Prestataire 
+                    //  https://github.com/Guichard-Gael/Tuto_mail_Symfony  
+                    $this->emailVerifier->sendEmailConfirmation(
+                        'app_verify_email',
+                        $prestataire,
+                        (new TemplatedEmail())
+                            ->from(new Address('mailer@your-domain.com', 'Bien Etre'))
+                            ->to($contenuMail)
 
-                        // Editer en français
-                        // ->subject('Please Confirm your Email')
-                        ->subject('Pouvez vous confirmer votre adresse mail ?')
-                        ->htmlTemplate('registration/confirmation_email.html.twig')
-                );
+                            // Editer en français
+                            // ->subject('Please Confirm your Email')
+                            ->subject('Pouvez vous confirmer votre adresse mail ?')
+                            ->htmlTemplate('registration/confirmation_email.html.twig')
+                    );
 
+                    // $entityManager->persist($prestataire);
+                    // $entityManager->flush(); à remplacer par handleEmailConfirmation en 2ème partie
 
-                // $entityManager->persist($prestataire);
-                // $entityManager->flush(); à remplacer par handleEmailConfirmation en 2ème partie
-
-                // Après envoie de l'email à la personne qui souhaite s'inscrire
-                $this->addFlash('success', "Un email vous a été envoyé ");
+                    // Après envoie de l'email à la personne qui souhaite s'inscrire
+                    $this->addFlash('success', "Un email vous a été envoyé ");
 
 
-                // do anything else you need here, like send an email
+                    // do anything else you need here, like send an email
+                    return $this->redirectToRoute('app_register');
+
+
+                } elseif ($typeUtilisateur === 'internaute') {
+                    // Traitement pour le cas où l'internaute est choisi
+                    // Ici, vous pouvez faire un traitement spécifique pour les internautes, par exemple
+
+                    // generate a signed url and email it to the user Internaute 
+                    //  https://github.com/Guichard-Gael/Tuto_mail_Symfony  
+                    $this->emailVerifier->sendEmailConfirmation(
+                        'app_verify_email_internaute',
+                        $internaute,
+                        (new TemplatedEmail())
+                            ->from(new Address('mailer@your-domain.com', 'Bien Etre'))
+                            ->to($internaute->getEmail())
+
+                            // Editer en français
+                            // ->subject('Please Confirm your Email')
+                            ->subject('Pouvez vous confirmer votre adresse mail ?')
+                            ->htmlTemplate('registration/confirmation_email.html.twig')
+                    );
+
+                    // $entityManager->persist($internaute);
+                    // $entityManager->flush(); à remplacer par handleEmailConfirmation en 2ème partie
+
+                    // Après envoie de l'email à la personne qui souhaite s'inscrire
+                    $this->addFlash('success', "Un email vous a été envoyé ");
+
+                    // do anything else you need here, like send an email
+                    return $this->redirectToRoute('app_register');
+
+                }
+                
+            }
+            // else si le mail est déjà en DB
+            else { 
+            //     dd("c'est quoi ça !");
+            //     # code...
+                // message flash
+                $this->addFlash('verify_email_error', "votre adresse email existe déjà veuillez vous connecter à votre compte ");
 
                 return $this->redirectToRoute('app_register');
             }
-            // } else {
-            //     dd("c'est quoi ça !");
-            //     # code...
-            //     // message flash
-            //     $this->addFlash('verify_email_error', "votre adresse email existe déjà veuillez vous connecter à votre compte ");
-
-            //     return $this->redirectToRoute('app_register');
-            // }
-
         }
-
+        /* CATEGORIES DE SERVICES */
         // je récupère les données catégories de ma DB
         $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
 
         // tableau des catégories
         $categories = $repositoryCategory->findAll();
 
+    
+
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
             'categories' => $categories,
         ]);
+
     }
+
 
     /* 2ième partie de l'inscription */
     // 1. Vérifier l'émail
@@ -206,6 +237,63 @@ class RegistrationController extends AbstractController
 
         ]);
     }
+    
+    #[Route('/verifyemailinternaute', name: 'app_verify_email_internaute')]
+    public function verifyInternauteEmail(Request $request, TranslatorInterface $translator): Response
+    {
+
+        // Comment récupérer l'information dans l' URL    
+        //dump($request->query->get('email'));
+        //dd($request);
+        $email = $request->query->get('email');
+
+        // Création d'un internaute
+        $internaute = new Internaute;
+
+        // Les infos de mon prestataire (formulaire1)
+        $internaute->setEmail($email);
+        $internaute->setIsVerified(true);
+        $internaute->setRoles(['ROLE_INTERNAUTE']);
+        $internaute->setTypeUtilisateur('internaute');
+
+        $internaute->setInscription(new DateTime());
+        // !!! setInscription pour pouvoir récupérer la date de l'inscription ainsi l'internaute sera inscrit à la date du jour
+
+        // validate email confirmation link, sets User::isVerified=true and persists
+        try {
+            // !!! Si l'email a déjà été soumis (l'email est en DB) alors envoyer un message flash vous avez déjà confirmé votre email pour votre inscription 
+
+            if ($internaute->isVerified() !== true) {
+
+                $this->addFlash('verify_email_error', 'Vous avez déjà confimé votre inscription');
+                return $this->redirectToRoute('app_register');
+            } else {
+                // Gestion de la confirmation du mail
+                $this->emailVerifier->handleEmailConfirmation($request, $internaute);
+            }
+        } catch (VerifyEmailExceptionInterface $exception) {
+            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
+
+            return $this->redirectToRoute('app_register');
+        }
+
+        // @TODO Change the redirect on success and handle or remove the flash message in your templates
+        $this->addFlash('success', 'Votre adresse mail a bien été vérifiée');
+
+        //
+        // $this->getUser();
+        //dump( $this->getUser());
+        //die();
+
+        // redirection non pas vers app_inscription qui est le formulaire de finalisation du prestataire mais redirection vers app_inscription_internaute qui est le formulaire de finalisation de l'internaute
+        return $this->redirectToRoute('app_inscription', [
+            'id' => $internaute->getId(),
+
+        ]);
+    }
+    
+    
+    
 
 
 
