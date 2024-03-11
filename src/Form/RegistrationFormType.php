@@ -20,7 +20,13 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-
+// -> add('userType', ChoiceType::class, [
+//     'choices' =>[
+//         'Prestataire' => 'prestataire',
+//         'Internaute' => 'internaute',
+//         // 'expanded' => true Affiche sous forme de bouton radio
+//     ]
+// ])
 
 
             ->add('agreeTerms', CheckboxType::class, [

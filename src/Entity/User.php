@@ -21,6 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\InheritanceType('JOINED')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 
+// https://symfony.com/doc/current/security.html#the-user
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -31,7 +32,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     protected ?string $email = null;
 
-    #[ORM\Column]
+    // [ORM\Column(type: 'json')]
+    // protected array $roles = [];
+    #[ORM\Column] 
     protected array $roles = [];
 
     /**
@@ -72,6 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
     // c'est un héritage pas une relation
     // #[ORM\OneToOne(mappedBy: 'utilisateur', cascade: ['persist', 'remove'])]
     // private ?Internaute $internaute = null;
@@ -86,8 +90,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
-
-    public function setEmail(string $email): static
+// https://symfony.com/doc/current/security.html self au lieu de static idem role
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -96,7 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * A visual identifier that represents this user.
-     *
+     * The public representation of the user (e.g. a username, an email address, etc.)
      * @see UserInterface
      */
     public function getUserIdentifier(): string
@@ -115,8 +119,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return array_unique($roles);
     }
-
-    public function setRoles(array $roles): static
+// Le mot-clef self permet d'utiliser une méthode ou une propriété de la classe elle-même. Utiliser ces mots clefs évite simplement de répéter le nom de la classe dans ton code
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 

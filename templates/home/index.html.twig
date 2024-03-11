@@ -8,6 +8,14 @@
 	<p>Bienvenu sur le site
 		<span class='bold'>Annuaire Bien-Etre</span>
 	</p>
+	{# message flash #}
+	{% for flash_error in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    {% for flash_success in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flash_success }}</div>
+    {% endfor %}
+
 	<p>Ce site est dédié aux commerçants désireux de promouvoir leurs services sur cette plateForme.<br>
 		Vous pourrez vous inscrire en créant un compte PRESTATAIRE.</p>
 	<p>En tant qu'internaute, vous retrouverez au même endrois une multitude de services et de prestataires dédiés au  'bien-être'.<br>
