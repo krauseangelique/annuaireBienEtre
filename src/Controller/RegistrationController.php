@@ -62,7 +62,7 @@ class RegistrationController extends AbstractController
                 $contenuMail = $form->get('email')->getData(); V
                 2) vérification de la valeur du mail Est ce que celle-ci se trouve déjà  en DB
                     2a) On a besoin d'une query et une connection PDO en Symfony c'est le 
-                    repertoire Repository User et on va utiliser l' EntityManager et on va appeler User repository
+                    repertoire Repository User et on va utiliser l'EntityManager et on va appeler User repository
                     $repository =$entityManager->getRepository(Prestataire::class); V
                     2b) On va appeler la méthode  findOneBy() du user Repository afin de pouvoir vérifier si l'email est en DB. V
                 3) Si l'émail se trouve en DB afficher le message d'erreur  : votre adresse email existe déjà veuillez vous connecter à votre compte
@@ -102,10 +102,10 @@ class RegistrationController extends AbstractController
                     //  https://github.com/Guichard-Gael/Tuto_mail_Symfony  
                     $this->emailVerifier->sendEmailConfirmation(
                         'app_verify_email',
-                        $prestataire,
+                        $user,
                         (new TemplatedEmail())
                             ->from(new Address('mailer@your-domain.com', 'Bien Etre'))
-                            ->to($contenuMail)
+                            ->to($user->getEmail())
 
                             // Editer en français
                             // ->subject('Please Confirm your Email')
@@ -126,16 +126,16 @@ class RegistrationController extends AbstractController
 
                 } elseif ($typeUtilisateur === 'internaute') {
                     // Traitement pour le cas où l'internaute est choisi
-                    // Ici, vous pouvez faire un traitement spécifique pour les internautes, par exemple
+                
 
                     // generate a signed url and email it to the user Internaute 
                     //  https://github.com/Guichard-Gael/Tuto_mail_Symfony  
                     $this->emailVerifier->sendEmailConfirmation(
                         'app_verify_email_internaute',
-                        $internaute,
+                        $user,
                         (new TemplatedEmail())
                             ->from(new Address('mailer@your-domain.com', 'Bien Etre'))
-                            ->to($internaute->getEmail())
+                            ->to($user->getEmail())
 
                             // Editer en français
                             // ->subject('Please Confirm your Email')
@@ -165,14 +165,14 @@ class RegistrationController extends AbstractController
                 return $this->redirectToRoute('app_register');
             }
         }
+
+
         /* CATEGORIES DE SERVICES */
         // je récupère les données catégories de ma DB
         $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
 
         // tableau des catégories
         $categories = $repositoryCategory->findAll();
-
-    
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
@@ -250,7 +250,7 @@ class RegistrationController extends AbstractController
         // Création d'un internaute
         $internaute = new Internaute;
 
-        // Les infos de mon prestataire (formulaire1)
+        // Les infos de mon INTERNAUTE (formulaire1)
         $internaute->setEmail($email);
         $internaute->setIsVerified(true);
         $internaute->setRoles(['ROLE_INTERNAUTE']);
@@ -286,7 +286,7 @@ class RegistrationController extends AbstractController
         //die();
 
         // redirection non pas vers app_inscription qui est le formulaire de finalisation du prestataire mais redirection vers app_inscription_internaute qui est le formulaire de finalisation de l'internaute
-        return $this->redirectToRoute('app_inscription', [
+        return $this->redirectToRoute('app_inscription_internaute', [
             'id' => $internaute->getId(),
 
         ]);
@@ -294,9 +294,6 @@ class RegistrationController extends AbstractController
     
     
     
-
-
-
     // partie 3 : Finalisation de l'inscription PRESTATAIRE
     //https://symfony.com/doc/current/routing.html#parameters-validation  int $id il passe bien : https://localhost:8000/inscription/28
     // \d+  doit être un nombre
@@ -308,21 +305,16 @@ class RegistrationController extends AbstractController
             defaults: ['id' => 1],
         )
     ]
+    // Hash du Password
     public function inscription(Request $request, int $id, EntityManagerInterface $entityManager, UserPasswordHasherInterface $prestatairePasswordHasher): Response
     {
 
         // Récupération de l'id 
         $userRepository = $entityManager->getRepository(User::class);
 
-
         // je dois vérifier la VALIDITE de l'inscription : &&  $prestataireInscrit->isInscriptConfirmee() != null
-
-
         // Je récupère les données du Prestataire dont l'id est passé en paramètre de l'url
         $prestataireInscrit = $userRepository->findOneBy(['id' => $id]); // l'id passé https://localhost:8000/inscription/28
-
-
-
 
         //$prestataireInscrit = new Prestataire; // On ne traite pas un nouveau prestataire MAIS un prestataire dont l'émail est déjà inscrit dans la DB
         // Les infos de mon prestataire (formulaire2)
@@ -333,12 +325,11 @@ class RegistrationController extends AbstractController
         if ($id >= 1) {
             // le code qui suit peut s'exécuter
 
-
-            // appel de la méthode isInscriptConfirmee() sur l'objet $prestataireInscrit
+            // appel de la méthode isInscriptConfirmee() sur l'objet $prestataireInscrit C'est pour sortir les 4 derniers prestataires inscrit
             if ($prestataireInscrit->isInscriptConfirmee() == true) {
 
-                // @TODO Change the redirect on success and handle or remove the flash message in your templates
                 $this->addFlash('success', 'Votre inscription est bien confirmée');
+
 
                 return $this->redirectToRoute('app_home');
             }
@@ -351,17 +342,17 @@ class RegistrationController extends AbstractController
             //     $repository = $entityManager->getRepository(User::class);
             // chercher comment pousser (push) les infos en DB 
 
-            /*FORMULAIRE */
+            /* FORMULAIRE */
             $form = $this->createForm(PrestataireType::class, $prestataireInscrit);
 
 
-            /* 
-        https://www.comment-devenir-developpeur.com/les-formulaires-sous-symfony-6#:~:text=Dans%20Symfony%2C%20tous%20sont%20des%20%C2%AB%20types%20de,de%20formulaire%20%C2%BB%20%28par%20exemple%2C%20UserProfileType%29.%20%C3%89l%C3%A9ments%20suppl%C3%A9mentaires
-        2. Création de classes de formulaire
-        Symfony recommande de mettre le moins de logique possible dans les contrôleurs. C’est pourquoi il est préférable de déplacer les formulaires complexes vers des classes dédiées plutôt que de les définir dans les actions du contrôleur. De plus, les formulaires définis dans des classes peuvent être réutilisés dans plusieurs actions et services
+                    /* 
+                    https://www.comment-devenir-developpeur.com/les-formulaires-sous-symfony-6#:~:text=Dans%20Symfony%2C%20tous%20sont%20des%20%C2%AB%20types%20de,de%20formulaire%20%C2%BB%20%28par%20exemple%2C%20UserProfileType%29.%20%C3%89l%C3%A9ments%20suppl%C3%A9mentaires
+                    2. Création de classes de formulaire
+                    Symfony recommande de mettre le moins de logique possible dans les contrôleurs. C’est pourquoi il est préférable de déplacer les formulaires complexes vers des classes dédiées plutôt que de les définir dans les actions du contrôleur. De plus, les formulaires définis dans des classes peuvent être réutilisés dans plusieurs actions et services
+                    */
 
-        */
-
+            /* CATEGORIES */
             // je récupère les données catégories de ma DB
             $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
 
@@ -384,14 +375,14 @@ class RegistrationController extends AbstractController
                 // persist et flush le prestataire
 
                 // aller chercher le champ dans le Form PrestataireType
-
                 // $prestataire = $form->getData('plainPassword');
 
                 // si je veux récupérer un champ de mon form je dois faire un get sur ce champ et chainer avec la méthode getData()
                 $plainPassword = $form->get('plainPassword')->getData();
-
                 // dd($plainPassword); il récupère bien le plainPlassword
 
+                /* https://github.com/SymfonyCasts/verify-email-bundle#Overview lire le README et faire : 
+                    composer require symfonycasts/verify-email-bundle */
 
                 // hash du mot de passe de Verify-email-bundle
                 $prestataireInscrit->setPassword(

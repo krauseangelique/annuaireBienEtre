@@ -24,9 +24,10 @@ class PrestataireRepository extends ServiceEntityRepository
 
     public function findBy4End(): array
     {
-        // récupération des 4 derniers prestataires inscrits
+        // récupération des 4 derniers prestataires inscrits dont l'inscription est confirmée - ils ont rempli le formulaire complet
         return $this->createQueryBuilder('p')
         ->orderBy('p.inscription', 'DESC')
+        ->where('p.inscriptConfirmee = true')
         ->setMaxResults(4)
         ->getQuery()
         ->getResult()

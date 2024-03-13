@@ -22,15 +22,16 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
--> add('typeUtilisateur', ChoiceType::class, [
-    'choices' =>[
-        'Prestataire' => 'prestataire',
-        'Internaute' => 'internaute',
-        
-    ],
-    'expanded' => true, 
-])
 
+            -> add('typeUtilisateur', ChoiceType::class, [
+
+                'choices' =>[
+                    'Prestataire' => 'prestataire',
+                    'Internaute' => 'internaute',    
+                ],
+                'expanded' => true,
+                
+            ])
 
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,

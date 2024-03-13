@@ -24,7 +24,7 @@ class EmailVerifier
     {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
-            //$user->getId(), 
+            // $user->getId(), 
             //===> le getId() est null or il faut un string d'id donc si on met la valeur 0 à la place ?
             0,
             $user->getEmail(),
@@ -35,7 +35,7 @@ class EmailVerifier
 
         $context = $email->getContext();
         $context['signedUrl'] = $signatureComponents->getSignedUrl();
-        $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
+        $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey(); // Contrôle click sur getExpirationMessageKey() pour aller dans le fichier VerifyEmailSignatureComponents.php
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
 
         $email->context($context);

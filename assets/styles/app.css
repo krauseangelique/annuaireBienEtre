@@ -90,14 +90,15 @@ https://freefrontend.com/css-accordions/
     padding-left: 1rem;
 }
 details {
-	background-color: #9800B0;
+	background-color: #800080; /* Couleur du LOGO #800080 */
 	margin-bottom: 10px;
     border: 1px solid 999;
-	filter: drop-shadow(2px 2px 5px #9800B0);
-    /* box-shadow: 2px 2px 5px #ccc; */
+    border-radius: 3px;
+	filter: drop-shadow(2px 2px 5px #f4d76b);  /* #ccc */
+   /* box-shadow: 2px 2px 5px #f4d76b;  #9800B0 */
 }
 details:hover {
-	filter: drop-shadow(5px 5px 4px #0A0A0A);
+	filter: drop-shadow(5px 5px 4px #0A0A0A); 
 }
 details > summary {
 	color: #f4de64;
