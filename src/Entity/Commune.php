@@ -23,12 +23,6 @@ class Commune
     #[ORM\OneToMany(mappedBy: 'commune', targetEntity: User::class)]
     private Collection $users;
 
-    #[ORM\ManyToOne(inversedBy: 'commune')]
-    private ?CodePostal $codePostal = null;
-
-    #[ORM\ManyToOne(inversedBy: 'communes')]
-    private ?Province $province = null;
-
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -81,27 +75,4 @@ class Commune
         return $this;
     }
 
-    public function getCodePostal(): ?CodePostal
-    {
-        return $this->codePostal;
-    }
-
-    public function setCodePostal(?CodePostal $codePostal): static
-    {
-        $this->codePostal = $codePostal;
-
-        return $this;
-    }
-
-    public function getProvince(): ?Province
-    {
-        return $this->province;
-    }
-
-    public function setProvince(?Province $province): static
-    {
-        $this->province = $province;
-
-        return $this;
-    }
 }

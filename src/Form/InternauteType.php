@@ -2,55 +2,47 @@
 
 namespace App\Form;
 
-use App\Entity\CategorieServices;
 use App\Entity\CodePostal;
 use App\Entity\Commune;
+use App\Entity\Image;
 use App\Entity\Internaute;
 use App\Entity\Prestataire;
 use App\Entity\Province;
-
+use Doctrine\DBAL\Types\BooleanType;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
-
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-// Création de classes de formulaire
-class PrestataireType extends AbstractType
+class InternauteType extends AbstractType
 {
-    // première méthode le buildForm()
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // CONFIRMATION de l'inscription FICHE SIGNALETIQUE COMPLETE
         $builder
-            //->add('email', EmailType::class)
-           // ->add('roles') // permet de connaitre le rôle dont l'user fait l'objet concernant les permissions qu'il possède 
+            // ->add('email')
+            // ->add('roles')
             // ->add('password')
-
             ->add('plainPassword', PasswordType::class, [
-                                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
+                // password is read and encoded in the controller (cf. doc Symfony)
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'S\'il vous plait, introduisez votre mot de passe',
+                        'message' => 'Veuillez introduire votre mot de passe',
                     ]),
                     new Length([
                         'min' => 6,
                         'minMessage' => 'votre mot de passe doit contenir au moins {{ limit }} caractères',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
+                        
                     ]),
                 ],
             ])
@@ -61,52 +53,50 @@ class PrestataireType extends AbstractType
             ->add('adresseRue', TextType::class, [
                 'required' => false,
             ])
-           /// ->add('inscription')
-            // ->add('typeUtilisateur') // string que je mets dans l'application
-            // ->add('nbEssaisInfructueux', IntegerType::class)
+            // ->add('inscription')
+            // ->add('typeUtilisateur')
+            // ->add('nbEssaisInfructueux')
             // ->add('banni')
             // ->add('inscriptConfirmee')
-
+            // ->add('isVerified')
             ->add('nom', TextType::class)
-            ->add('siteInternet', UrlType::class, [
-                'required' => false,
-            ])
-            ->add('numTel', TelType::class, [
-                'required' => false,
-            ])
-            ->add('numTVA', TextType::class)
+            ->add('prenom', TextType::class)
+            ->add('newsletter', BooleanType::class)
 
             ->add('adresseCP', EntityType::class, [
                 'class' => CodePostal::class,
+// 'choice_label' => 'id',
 'choice_label' => 'codePostal',
-'required' => false,
             ])
             ->add('adresseProvince', EntityType::class, [
                 'class' => Province::class,
+//'choice_label' => 'id',
 'choice_label' => 'province',
             ])
             ->add('commune', EntityType::class, [
                 'class' => Commune::class,
+//'choice_label' => 'id',
 'choice_label' => 'commune',
-'required' => false,
             ])
-            ->add('categorieServices', EntityType::class, [
-                'class' => CategorieServices::class,
-'choice_label' => 'nom',
-'multiple' => true,
-'expanded' => true,
-'required' => false,
+            ->add('image', EntityType::class, [
+                'class' => Image::class,
+'choice_label' => 'id',
             ])
-//             ->add('internautesFavoris', EntityType::class, [
-//                 'class' => Internaute::class,
+
+//             ->add('prestataires', EntityType::class, [
+//                 'class' => Prestataire::class,
 // 'choice_label' => 'id',
 // 'multiple' => true,
-// 'required' => false,
 //             ])
 
+//             ->add('prestatairesFavoris', EntityType::class, [
+//                 'class' => Prestataire::class,
+// 'choice_label' => 'id',
+// 'multiple' => true,
+//             ])
 
-            // Valider le formulaire
-            // ->add('Sauvegarder', SubmitType::class, ['label' => 'Enregistrer vos données pour finaliser votre inscription'])
+                    // moi je mets le submit dans ma vue donc je ne dois pas le prévoir ici
+                // ->add('editer', SubmitType::class)
         ;
     }
 
@@ -114,7 +104,7 @@ class PrestataireType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Prestataire::class,
+            'data_class' => Internaute::class,
         ]);
     }
 }

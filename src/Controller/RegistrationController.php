@@ -294,9 +294,10 @@ class RegistrationController extends AbstractController
     
     
     
-    // partie 3 : Finalisation de l'inscription PRESTATAIRE
+    /* Partie 3 : Finalisation de l'inscription PRESTATAIRE */
+
     //https://symfony.com/doc/current/routing.html#parameters-validation  int $id il passe bien : https://localhost:8000/inscription/28
-    // \d+  doit être un nombre
+    // \d+  doit être un NOMBRE pour ne pas qu'on écrive n'importe quoi dans l'URL
     #[
         Route(
             '/inscription/{id}',
@@ -323,45 +324,31 @@ class RegistrationController extends AbstractController
 
         // test conditionnel
         if ($id >= 1) {
-            // le code qui suit peut s'exécuter
-
+            
             // appel de la méthode isInscriptConfirmee() sur l'objet $prestataireInscrit C'est pour sortir les 4 derniers prestataires inscrit
             if ($prestataireInscrit->isInscriptConfirmee() == true) {
-
                 $this->addFlash('success', 'Votre inscription est bien confirmée');
-
 
                 return $this->redirectToRoute('app_home');
             }
-
             // dump($prestataireInscrit->isInscriptConfirmee());
             // dd($prestataireInscrit);
-
-            // a) chercher comment passer l'info prestataire située dans la méthode verifyUserEmail dans la méthode inscription V
-            // b) selon la méthode trouvée pour y arriver, il faudra aller chercher en DB les informations du prestataire qui s'est inscrit précédemment
-            //     $repository = $entityManager->getRepository(User::class);
-            // chercher comment pousser (push) les infos en DB 
-
+    
             /* FORMULAIRE */
             $form = $this->createForm(PrestataireType::class, $prestataireInscrit);
 
-
-                    /* 
-                    https://www.comment-devenir-developpeur.com/les-formulaires-sous-symfony-6#:~:text=Dans%20Symfony%2C%20tous%20sont%20des%20%C2%AB%20types%20de,de%20formulaire%20%C2%BB%20%28par%20exemple%2C%20UserProfileType%29.%20%C3%89l%C3%A9ments%20suppl%C3%A9mentaires
-                    2. Création de classes de formulaire
-                    Symfony recommande de mettre le moins de logique possible dans les contrôleurs. C’est pourquoi il est préférable de déplacer les formulaires complexes vers des classes dédiées plutôt que de les définir dans les actions du contrôleur. De plus, les formulaires définis dans des classes peuvent être réutilisés dans plusieurs actions et services
+                    /* https://www.comment-devenir-developpeur.com/les-formulaires-sous-symfony-6#:~:text=Dans%20Symfony%2C%20tous%20sont%20des%20%C2%AB%20types%20de,de%20formulaire%20%C2%BB%20%28par%20exemple%2C%20UserProfileType%29.%20%C3%89l%C3%A9ments%20suppl%C3%A9mentaires 
                     */
 
             /* CATEGORIES */
             // je récupère les données catégories de ma DB
             $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
-
             // tableau des catégories
             $categories = $repositoryCategory->findAll();
 
 
+            /* Partie 4. Soumettre le formulaire */
 
-            // 4. Soumettre le formulaire
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 // $form->getData() holds the submitted values
@@ -409,16 +396,18 @@ class RegistrationController extends AbstractController
             }
 
 
-            // 5.retourner une vue, un fichier TWIG
+            /* Partie 5.retourner une vue, un fichier TWIG */
+            
             return $this->render('registration/inscription.html.twig', [
                 'registrationForm' => $form->createView(),
                 'categories' => $categories,
             ]);
-        } else {
 
+        } else {
             $this->addFlash('error', 'Votre procédure d\'inscription rencontre un problème, veuillez recommencer !');
 
             return $this->redirectToRoute('app_home');
         }
     }
+
 }
