@@ -8,15 +8,20 @@ use App\Entity\Image;
 use App\Entity\Internaute;
 use App\Entity\Prestataire;
 use App\Entity\Province;
-use Doctrine\DBAL\Types\BooleanType;
-use phpDocumentor\Reflection\Types\Boolean;
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+
+use Symfony\Component\Form\FormTypeInterface;
+
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -61,7 +66,18 @@ class InternauteType extends AbstractType
             // ->add('isVerified')
             ->add('nom', TextType::class)
             ->add('prenom', TextType::class)
-            ->add('newsletter', BooleanType::class)
+
+            ->add('newsletter', ChoiceType::class, [
+                'choices' => [
+                                's\'abonner à la newsletter' => true,
+                                'pas d\'abonnement ! ' => false,
+                                
+                            ],
+                'expanded' => true,
+                ])
+
+
+
 
             ->add('adresseCP', EntityType::class, [
                 'class' => CodePostal::class,
@@ -95,12 +111,12 @@ class InternauteType extends AbstractType
 // 'multiple' => true,
 //             ])
 
-                    // moi je mets le submit dans ma vue donc je ne dois pas le prévoir ici
-                // ->add('editer', SubmitType::class)
+                
+                ->add('soumettre', SubmitType::class)
         ;
     }
 
-    // La deuxième méthode (configureOptions) va au fait nous permettre d'explicitement définir la classe à la qu'elle est rattachée ce formulaire.
+    // La deuxième méthode (configureOptions) va au fait nous permettre d'explicitement définir la classe à laquelle est rattachée ce formulaire.
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

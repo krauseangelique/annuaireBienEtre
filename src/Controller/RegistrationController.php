@@ -6,6 +6,7 @@ use App\Entity\CategorieServices;
 use App\Entity\Internaute;
 use App\Entity\Prestataire;
 use App\Entity\User;
+use App\Form\InternauteType;
 use App\Form\PrestataireType;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
@@ -13,8 +14,11 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\BrowserKit\Response as BrowserKitResponse;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,7 +45,7 @@ class RegistrationController extends AbstractController
 
         // 3. lier le formulaire au controller dans lequel on se trouve
         $form = $this->createForm(RegistrationFormType::class, $user);
-        
+
         // 4. récupèrer les informations du formulaire envoyé
         $form->handleRequest($request);
 
@@ -122,11 +126,9 @@ class RegistrationController extends AbstractController
 
                     // do anything else you need here, like send an email
                     return $this->redirectToRoute('app_register');
-
-
                 } elseif ($typeUtilisateur === 'internaute') {
                     // Traitement pour le cas où l'internaute est choisi
-                
+
 
                     // generate a signed url and email it to the user Internaute 
                     //  https://github.com/Guichard-Gael/Tuto_mail_Symfony  
@@ -151,14 +153,12 @@ class RegistrationController extends AbstractController
 
                     // do anything else you need here, like send an email
                     return $this->redirectToRoute('app_register');
-
                 }
-                
             }
             // else si le mail est déjà en DB
-            else { 
-            //     dd("c'est quoi ça !");
-            //     # code...
+            else {
+                //     dd("c'est quoi ça !");
+                //     # code...
                 // message flash
                 $this->addFlash('verify_email_error', "votre adresse email existe déjà veuillez vous connecter à votre compte ");
 
@@ -176,9 +176,8 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
-            'categories' => $categories,
+            // 'categories' => $categories,
         ]);
-
     }
 
 
@@ -237,7 +236,7 @@ class RegistrationController extends AbstractController
 
         ]);
     }
-    
+
     #[Route('/verifyemailinternaute', name: 'app_verify_email_internaute')]
     public function verifyInternauteEmail(Request $request, TranslatorInterface $translator): Response
     {
@@ -291,9 +290,9 @@ class RegistrationController extends AbstractController
 
         ]);
     }
-    
-    
-    
+
+
+
     /* Partie 3 : Finalisation de l'inscription PRESTATAIRE */
 
     //https://symfony.com/doc/current/routing.html#parameters-validation  int $id il passe bien : https://localhost:8000/inscription/28
@@ -324,7 +323,7 @@ class RegistrationController extends AbstractController
 
         // test conditionnel
         if ($id >= 1) {
-            
+
             // appel de la méthode isInscriptConfirmee() sur l'objet $prestataireInscrit C'est pour sortir les 4 derniers prestataires inscrit
             if ($prestataireInscrit->isInscriptConfirmee() == true) {
                 $this->addFlash('success', 'Votre inscription est bien confirmée');
@@ -333,12 +332,13 @@ class RegistrationController extends AbstractController
             }
             // dump($prestataireInscrit->isInscriptConfirmee());
             // dd($prestataireInscrit);
-    
+
             /* FORMULAIRE */
             $form = $this->createForm(PrestataireType::class, $prestataireInscrit);
 
-                    /* https://www.comment-devenir-developpeur.com/les-formulaires-sous-symfony-6#:~:text=Dans%20Symfony%2C%20tous%20sont%20des%20%C2%AB%20types%20de,de%20formulaire%20%C2%BB%20%28par%20exemple%2C%20UserProfileType%29.%20%C3%89l%C3%A9ments%20suppl%C3%A9mentaires 
+            /* https://www.comment-devenir-developpeur.com/les-formulaires-sous-symfony-6#:~:text=Dans%20Symfony%2C%20tous%20sont%20des%20%C2%AB%20types%20de,de%20formulaire%20%C2%BB%20%28par%20exemple%2C%20UserProfileType%29.%20%C3%89l%C3%A9ments%20suppl%C3%A9mentaires 
                     */
+
 
             /* CATEGORIES */
             // je récupère les données catégories de ma DB
@@ -397,12 +397,10 @@ class RegistrationController extends AbstractController
 
 
             /* Partie 5.retourner une vue, un fichier TWIG */
-            
             return $this->render('registration/inscription.html.twig', [
                 'registrationForm' => $form->createView(),
                 'categories' => $categories,
             ]);
-
         } else {
             $this->addFlash('error', 'Votre procédure d\'inscription rencontre un problème, veuillez recommencer !');
 
@@ -410,4 +408,75 @@ class RegistrationController extends AbstractController
         }
     }
 
+
+    /* Partie 3 Finalisation de l'inscription Internaute */
+    // id' => '\d+ l'id doit être un chiffre
+    #[Route(
+        '/inscriptioninternaute/{id}',
+        name: 'app_inscription_internaute',
+        requirements: ['id' => '\d+'],
+        defaults: ['id' => 1],
+    )]
+    
+    // Hash du Password
+    public function inscriptioninternaute(Request $request, int $id, EntityManagerInterface $entityManager, UserPasswordHasherInterface $internautePasswordHasher): Response
+    {
+        // Récupération de l'id
+        $userRepository = $entityManager->getRepository(User::class);
+
+        // Récupération du paramètre de l'url ici l'id
+        $internauteInscrit = $userRepository->findOneBy(['id' => $id]);
+
+        if ($id >= 1) {
+
+            // confirmation de l'inscription
+            if ($internauteInscrit->isInscriptConfirmee() == true) {
+                // message flash
+                $this->addFlash('success', 'Votre inscription comme internaute est confirmée !');
+
+                return $this->redirectToRoute('app_home');
+            }
+
+            /* FORMULAIRE */
+            $formInternaute = $this->createForm(InternauteType::class, $internauteInscrit);
+
+            /* Partie 4 formulaire */
+            $formInternaute->handleRequest($request);
+
+            if ($formInternaute->isSubmitted() && $formInternaute->isValid()) {
+
+                $task = $formInternaute->getData();
+
+
+                $plainPassword = $formInternaute->get('plainPassword')->getData();
+                // hash du mot de passe Verify email bundle
+                $internauteInscrit->setPassword(
+                    $internautePasswordHasher->hashPassword(
+                        $internauteInscrit,
+                        $formInternaute->get('plainPassword')->getData()
+                    )
+                );
+
+                // Si Password haché est bien en DB alors je confirme l'inscription en settant à TRUE
+                $internauteInscrit->setInscriptConfirmee(true);
+
+                $entityManager->persist($internauteInscrit);
+                $entityManager->flush();
+                
+                // Message flash de success
+                $this->addFlash('success', 'Votre inscription comme INTERNAUTE est bien validée');
+
+                return $this->redirectToRoute('app_home');
+            }
+
+            /* Partie 5.retourner une vue, un fichier TWIG */
+            return $this->render('registration/inscriptioninternaute.html.twig', [
+                'registrationForm' => $formInternaute->createView(),
+            ]);
+        } else {
+            $this->addFlash('error', 'Votre procédure d\'inscription a rencontré un problème, veullez recommencer');
+
+            return $this->redirectToRoute('app_home');
+        }
+    }
 }
