@@ -2,7 +2,7 @@
 {% block listeCategory %}
 	<details>
 		<summary>Recherche par... catégorie de services</summary>
-		<select class="beau" name="categorieDeService" multiple>
+		<select class="beau" name="categorieDeService" id="categorieDeService" multiple>
 
 			{# if you don't want to expose the controller with a public URL,
 																use the controller() function to define the controller to execute #}
@@ -11,10 +11,27 @@
 		
 		
 
+			{# @TODO revoir la syntaxe pour que cela fonctionne  #}
 			{% for categorie in categories %} 
-			<option value="valeur1">{{categorie.nom}}</option> 
+			
+        <option value="{{ categorie.id }}" data-url="{{ path('app_detail_category', { 'id' : categorie.id }) }}">{{ categorie.nom }}</option> 
+		
 			{% endfor %} <!-- Ajoutez d'autres options si nécessaire -->
 		</select>
+		<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectElement = document.getElementById('categorieDeService');
+    selectElement.addEventListener('change', function() {
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        const url = selectedOption.getAttribute('data-url');
+			if (url) {
+            window.location.href = url;
+        }
+
+    });
+});
+</script>
+
 	</details>
 	
 

@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     // #[Route('/test2', name: 'app_test2')] // la route test2 permet de visualisé la liste des Categories mais comme on va inclure cette liste dans base.html.twig, la route ne sera plus utilisée et donc je peux la commenter.
+    
     /**
      * @function listeCategory : liste les catégories de services
      */
@@ -31,4 +32,17 @@ class CategoryController extends AbstractController
             'categories' => $categories,
         ]);    
     }
+
+    #[Route('/category/detail/{id}', name: 'app_detail_category')] 
+    public function detailCategory(CategorieServices $category, EntityManagerInterface $entityManager): Response
+    {
+
+    
+
+        return $this->render('category/detailCategory.html.twig', [
+    
+            'categorie' => $category,
+        ]);    
+    }
+
 }
