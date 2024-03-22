@@ -31,6 +31,7 @@ class RegistrationFormType extends AbstractType
                 ],
                 'expanded' => true,
                 
+                
             ])
 
             ->add('agreeTerms', CheckboxType::class, [

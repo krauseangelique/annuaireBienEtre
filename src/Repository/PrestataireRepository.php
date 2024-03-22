@@ -34,6 +34,38 @@ class PrestataireRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findPrestaire($categorieServices, $commune, $adresseCP, $adresseProvince, $nom)
+    {
+        // recherche combinée sur 1 à 5 critères des prestataires
+        $queryBuilder = $this->createQueryBuilder('p')
+        ->where('p.nom = :nom')
+        ->setParameter('nom', $nom);
+
+        if($categorieServices !== null){
+            $queryBuilder->join('p.categorieServices', 'c')
+            ->andWhere('c = :categorieServices')
+            ->setParameter('categorieServices', $categorieServices);
+        }
+
+        if($commune !== null){
+            $queryBuilder->andWhere('p.commune = :commune')
+            ->setParameter('commune', $commune);
+        }
+
+        if($adresseCP !== null){
+            $queryBuilder->andWhere('p.adresseCP = :adresseCP')
+            ->setParameter('adresseCP', $adresseCP);
+        }
+
+        if($adresseProvince !== null){
+            $queryBuilder->andWhere()('p.adresseProvince = :adresseProvince')
+            ->setParameter('adresseProvince', $adresseProvince);
+
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Prestataire[] Returns an array of Prestataire objects
 //     */
