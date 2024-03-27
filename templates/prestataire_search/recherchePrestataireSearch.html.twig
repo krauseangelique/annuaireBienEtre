@@ -1,0 +1,33 @@
+{# {% extends 'base.html.twig' %} #}
+{# vue spécifique pour les prestataires qui répondent aux critères de la RECHERCHE qu'on reprendra (include) render dans le base.html.twig #}
+{% block title %}Recherche Prestataire - Annuaire bien-être
+{% endblock %}
+{% block recherchePrestataireSearch %}
+
+
+	{# dans l'attribut action je vais mettre la route pour que le serveur accède aux informations du formulaire #}
+	<form method="post" action="{{ path('app_prestataire_search') }}">
+		<fieldset>
+			<legend>Votre recherche</legend>
+			<!-- Titre du fieldset -->
+
+			<label for="nom">Sur le nom</label>
+			<input type="text" name="nom" id="nom">
+
+			<label for="categorie-select">Sur la catégorie</label>
+			<select name="categorieDeService" id="categorie-select">
+				<option value="">-- choisissez votre categorie --</option>
+            {% for categorie in categories %}
+            
+				<option value="{{ categorie.id }}"data-url="{{ path('app_prestataire_search', { 'id' : categorie.id }) }}">{{ categorie.nom }}</option>
+            {% endfor %}
+
+			</select>
+			<label for="commune">Sur la commune</label>
+			<input type="text" name="commune" id="commune">
+		</fieldset>
+		
+		<input type="submit" value="Rechercher">
+	</form>
+
+{% endblock %}

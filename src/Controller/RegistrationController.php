@@ -11,6 +11,7 @@ use App\Form\PrestataireType;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use DateTime;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -175,7 +176,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
-            // 'categories' => $categories,
+            'categories' => $categories,
         ]);
     }
 
@@ -467,10 +468,12 @@ class RegistrationController extends AbstractController
 
                 return $this->redirectToRoute('app_home');
             }
-
+            $categories = $entityManager->getRepository(CategorieServices::class)->findAll();
             /* Partie 5.retourner une vue, un fichier TWIG */
             return $this->render('registration/inscriptioninternaute.html.twig', [
                 'registrationForm' => $formInternaute->createView(),
+                'categories' => $categories,
+
             ]);
         } else {
             $this->addFlash('error', 'Votre procédure d\'inscription a rencontré un problème, veullez recommencer');

@@ -36,32 +36,36 @@ class PrestataireRepository extends ServiceEntityRepository
 
     public function findPrestaire($categorieServices, $commune, $adresseCP, $adresseProvince, $nom)
     {
+        $queryBuilder = $this->createQueryBuilder('p');
+        if($nom !== ""){
         // recherche combinée sur 1 à 5 critères des prestataires
-        $queryBuilder = $this->createQueryBuilder('p')
-        ->where('p.nom = :nom')
-        ->setParameter('nom', $nom);
-
-        if($categorieServices !== null){
+        // https://www.php.net/manual/fr/xsltprocessor.setparameter.php
+        $queryBuilder->andwhere('p.nom = :nom')
+    
+        ->setParameter('nom', $nom); 
+        // ->setParameter('nom', '%' .$nom. '%'); // SELECT * FROM Prestataires WHERE nom LIKE '% leNomQueJeRecherche %' 
+        }
+        if(($categorieServices !== "")){
             $queryBuilder->join('p.categorieServices', 'c')
             ->andWhere('c = :categorieServices')
             ->setParameter('categorieServices', $categorieServices);
         }
 
-        if($commune !== null){
+        if($commune !== ""){
             $queryBuilder->andWhere('p.commune = :commune')
             ->setParameter('commune', $commune);
         }
 
-        if($adresseCP !== null){
-            $queryBuilder->andWhere('p.adresseCP = :adresseCP')
-            ->setParameter('adresseCP', $adresseCP);
-        }
+        // if($adresseCP !== null){
+        //     $queryBuilder->andWhere('p.adresseCP = :adresseCP')
+        //     ->setParameter('adresseCP', $adresseCP);
+        // }
 
-        if($adresseProvince !== null){
-            $queryBuilder->andWhere()('p.adresseProvince = :adresseProvince')
-            ->setParameter('adresseProvince', $adresseProvince);
+        // if($adresseProvince !== null){
+        //     $queryBuilder->andWhere()('p.adresseProvince = :adresseProvince')
+        //     ->setParameter('adresseProvince', $adresseProvince);
 
-        }
+        // }
 
         return $queryBuilder->getQuery()->getResult();
     }

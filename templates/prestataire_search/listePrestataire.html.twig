@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PrestataireSearchController!{% endblock %}
+
+{% block content %}
+
+            <h1>Ceci est la liste - résultat - de la RECHERCHE de votre (vos) Prestataire(s)</h1>
+        
+        {% for prestataire in prestataires %} 
+        {# ici il me donne la categories le string comme id et je veux le nom je dois aller chercher le nom de la catégorie via une nouvelle requête #}
+        {# je dois transformer mes objets prestataire.commune en des strings revoir la théorie en POO  VOIR fichier Entity User.php méthode __toString() #}
+            <p>nom de la catégorie: {{categories}}</p> 
+            <p>nom du prestataire : {{prestataire.nom}}</p>
+    {# J'ai ajouté dans l'Entity la méthode __toString() #}
+            <p>nom de la commune : {{prestataire.commune }}</p>
+            <p>nom de la province : {{prestataire.adresseProvince}}</p>  
+            <p>numéro du code postal: {{prestataire.adresseCP}}</p>  
+        
+            
+        {% endfor %}
+    
+{% endblock %}

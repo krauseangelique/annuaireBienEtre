@@ -20,7 +20,6 @@ final class Version20240314173913 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP TABLE region_ville_codepostal');
         $this->addSql('ALTER TABLE commune DROP FOREIGN KEY FK_E2E2D1EEB2B59251');
         $this->addSql('ALTER TABLE commune DROP FOREIGN KEY FK_E2E2D1EEE946114A');
         $this->addSql('DROP INDEX IDX_E2E2D1EEB2B59251 ON commune');

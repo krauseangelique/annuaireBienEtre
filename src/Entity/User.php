@@ -283,4 +283,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    
+    // Méthode pour convertir l'OBJET en chaîne de caractères
+    public function __toString(){
+        return "User CP: " . $this->adresseCP . ", Commune: " . $this->commune . ", Province: " . $this->adresseProvince;
+    }
 }
+
