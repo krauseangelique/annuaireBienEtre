@@ -75,4 +75,10 @@ class Commune
         return $this;
     }
 
+    // ajout de la méthode __toString() pour permettre de transformer un objet en string
+    public function __toString()
+{
+    return $this->getCommune();
+}
+
 }

@@ -56,8 +56,14 @@
 										<li
 											class="nav-item pl-4">
 											{# j'inclu le fichier templates/prestataire_search/recherchePrestataireSearch.html.twig #}
-										{{ include('prestataire_search/recherchePrestataireSearch.html.twig') }} 
+										{# {{ include('prestataire_search/recherchePrestataireSearch.html.twig') }}  #}
 										{# dans l'attribut action je vais mettre la route pour que le serveur accède aux informations du formulaire #}
+
+										{# JE VEUX METTRE LE RECHERCHE PRESTATAIRE ICI https://symfony.com/doc/current/templates.html#embedding-controllers #}
+											{{ render(controller('App\\Controller\\ListeRecherchePrestataireController::formulaireRecherchePrestataire',
+    							)) }}
+
+
 	{# <form method="post" action="{{ path('app_prestataire_search') }}">
 		<fieldset>
 			<legend>Votre recherche</legend>

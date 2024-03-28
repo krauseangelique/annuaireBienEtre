@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: PrestataireRepository::class)]
-#[Broadcast]
+
 
 class Prestataire extends User
 {
@@ -314,5 +314,11 @@ class Prestataire extends User
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+
+        return $this->getNom();
     }
 }

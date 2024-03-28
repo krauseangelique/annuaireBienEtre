@@ -21,10 +21,35 @@
             
 				<option value="{{ categorie.id }}"data-url="{{ path('app_prestataire_search', { 'id' : categorie.id }) }}">{{ categorie.nom }}</option>
             {% endfor %}
-
 			</select>
-			<label for="commune">Sur la commune</label>
-			<input type="text" name="commune" id="commune">
+
+			<label for="commune-select">Sur la commune</label>
+			<select name="commune" id="commune-select">
+				<option value="">-- choisissez votre commune --</option>
+            {% for commune in communes %}
+				<option value="{{ commune.id }}"data-url="{{ path('app_prestataire_search', { 'id' : commune.id }) }}">{{ commune.commune }}</option>
+            {% endfor %}
+			</select>
+
+			{# <label for="commune">Sur la commune</label>
+			<input type="text" name="commune" id="commune"> #}
+			<label for="cp-select">Sur le code postal</label>
+			<select name="codepostal" id="cp-select">
+				<option value="">-- choisissez votre code postal --</option>
+            {% for codepostal in adresseCPs %}
+            
+				<option value="{{ codepostal.id }}"data-url="{{ path('app_prestataire_search', { 'id' : codepostal.id }) }}">{{ codepostal.codePostal}}</option>
+            {% endfor %}
+			</select>
+			<label for="province-select">Sur la province</label>
+			<select name="province" id="province-select">
+	<option value="">-- choisissez votre province --</option>
+			{% for province in adresseProvinces %}
+
+				<option value="{{ province.id}}"data-url="{{ path('app_prestataire_search', { 'id' : province.id}) }}"> {{ province.province}}</option>
+			{% endfor %}
+			</select>
+
 		</fieldset>
 		
 		<input type="submit" value="Rechercher">

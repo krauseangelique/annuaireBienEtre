@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: CodePostalRepository::class)]
-#[Broadcast]
+
 class CodePostal
 {
     #[ORM\Id]
@@ -74,4 +74,10 @@ class CodePostal
 
         return $this;
     }
+
+        // ajout de la méthode __toString() pour permettre de transformer un objet en string
+        public function __toString()
+        {
+            return $this->getCodePostal();
+        }
 }
