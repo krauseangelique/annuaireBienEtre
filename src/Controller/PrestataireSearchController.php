@@ -74,27 +74,15 @@ class PrestataireSearchController extends AbstractController
 
         // Afficher le premier élement du tableau de recherche
          // dump($resultatRecherches[0]->getCategorieServices()[0]->getNom());
-        // RECHERCHE PAS BON  car la catégorie se répète donc je dois reprendre l'ancienne version dans branch recherche
-        $tabCateg = [];
+    
 
-        foreach ($resultatRecherches as $key => $value) {
-        
-            // getCategorieServices() me renvoie le tableau de catégorie (la Collection de catégories) pour pouvoir lire les noms de la catégorie il faut boucler sur le tableau des catégories d'où le foreach imbriqué
-            foreach($resultatRecherches[$key]->getCategorieServices() as $keyCateg => $tabCategorie){
-
-                $tabCateg[] = $resultatRecherches[$key]->getCategorieServices()[$keyCateg]->getNom();
-            }
-        }
-
-        //dump($tabCateg);
-
-        // dd($resultatRecherches); // il m'affiche le résultat de la Recherche mais il ne change pas de route et n'affiche donc pas le résultat de la recherche
+        // dd($resultatRecherches); 
         // return $this->redirectToRoute('app_home');
         return $this->render('prestataire_search/listePrestataire.html.twig', [
 
             'prestataires' => $resultatRecherches,
             'categories' => $categorieServices,
-            'tabCateg' => $tabCateg,
+            
         ]);
     }
 

@@ -12,7 +12,7 @@
         <div class="border my-3">
         {# ici il me donne la categories le string comme id et je veux le nom je dois aller chercher le nom de la catégorie via une nouvelle requête #}
         {# je dois transformer mes objets prestataire.commune en des strings revoir la théorie en POO  VOIR fichier Entity User.php méthode __toString() #}
-            {% for categorie in tabCateg %}
+            {% for categorie in categories %}
             <p>nom de la catégorie: {{categorie}}</p> 
             {% endfor %}
             <p>nom du prestataire : {{prestataire.nom}}</p>
