@@ -74,7 +74,7 @@ class PrestataireSearchController extends AbstractController
 
         // Afficher le premier élement du tableau de recherche
          // dump($resultatRecherches[0]->getCategorieServices()[0]->getNom());
-    
+        // RECHERCHE PAS BON  car la catégorie se répète donc je dois reprendre l'ancienne version dans branch recherche
         $tabCateg = [];
 
         foreach ($resultatRecherches as $key => $value) {
