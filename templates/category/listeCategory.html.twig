@@ -1,12 +1,12 @@
 {# vue spécifique pour les catégories qu'on reprendra (include) render dans le base.html.twig #}
 {% block listeCategory %}
-	<details>
+	<details class="">
 
-		<summary>Recherche par... catégorie de services</summary>
+		<summary>Nos catégories de services : </summary>
 		<select class="beau" name="categorieDeService" id="categorieDeService" multiple>
 
 			{# if you don't want to expose the controller with a public URL,
-																use the controller() function to define the controller to execute #}
+				use the controller() function to define the controller to execute #}
 			{# Chemin\NomduController::nomdelamethode #}
 			
 			{% for categorie in categories %} 

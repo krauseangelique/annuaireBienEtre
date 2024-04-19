@@ -1,0 +1,46 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Détail FICHE  d'inscription Prestataire
+{% endblock %}
+
+{% block body %}
+
+    {% for flash_error in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    {% for flash_success in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flash_success }}</div>
+    {% endfor %}
+
+
+    <div class="example-wrapper">
+        <h1>FICHE  d'inscription Prestataire</h1>
+    </div>
+
+    <h2>Votre informations en tant que PRESTATAIRE</h2>
+
+    <p class="fw-bold">nom : {{prestataire.nom}}</p>
+    <p>numéro de maison : {{prestataire.adresseNum}}</p>
+    <p>rue : {{prestataire.adresseRue}} </p>
+    <p>code Postal : {{prestataire.adresseCP}}</p>
+    <p>ville : {{prestataire.commune}}</p>
+    <p>province : {{prestataire.adresseProvince|upper}}</p>
+    <h3>Catégorie</h3>
+    <p>catégorie(s) :
+    {% for cat in prestataire.categorieServices %}
+        {{cat}} /
+    {% endfor %}
+    </p> 
+    <p>n° de TVA : {{prestataire.numTVA}}</p>
+    <h3>Contact</h3>
+    <p>email : {{prestataire.email}}</p>
+    <p>téléphone : {{prestataire.numTel}}</p>
+    <p>site internet : {{prestataire.siteInternet}}</p>
+
+
+
+    {# Fin du formulaire #}
+
+    <a class="btn btn-primary" href="{{path('app_home')}}"> << retour à la page d'accueil</a>
+
+{% endblock %}

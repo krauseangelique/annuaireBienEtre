@@ -48,6 +48,7 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
         // $request->getSession()->set(SecurityBundle::LAST_USERNAME, $email);
         $request->getSession()->set(Security::LAST_USERNAME, $email);
     
+    
 
        // $request->getSession()->set('_security.last_username', $email);
         

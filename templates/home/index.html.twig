@@ -25,9 +25,11 @@
 		<form class="global me-4 ps-1" method="POST">
 
 			{# <select class="beau" name="categorieDeService" multiple> #}
-			<select class="beau" name="prestataire4Liste" multiple>
+			<select class="beau" name="prestataire4Liste" id="listePrestataire" multiple>
 				{% for prestataire in prestataires %}
-					<option value="valeur1">{{ prestataire.nom }}</option>
+				<option value="{{ prestataire.id }}" data-url="{{ path('app_detailPrestataire', { 'id' : prestataire.id }) }}">{{ prestataire.nom }}</option> 
+
+
 					<option value="valeur2">{{ prestataire.email }}</option>
 					<option value="valeur">id : {{ prestataire.id }}</option>
 
@@ -37,5 +39,17 @@
 
 		</form>
 	</div>
-	
+	<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const selectElement = document.getElementById('listePrestataire');
+				selectElement.addEventListener('change', function() {
+					const selectedOption = selectElement.options[selectElement.selectedIndex];
+					const url = selectedOption.getAttribute('data-url');
+						if (url) {
+						window.location.href = url;
+					}
+
+				});
+			});
+		</script>
 {% endblock %}

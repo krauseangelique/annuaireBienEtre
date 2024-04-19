@@ -64,11 +64,12 @@ class RegistrationController extends AbstractController
             /* 
                 1) récupération du contenu du champ email du formulaire
                 $contenuMail = $form->get('email')->getData(); V
-                2) vérification de la valeur du mail Est ce que celle-ci se trouve déjà  en DB
+                2) vérification de la valeur du mail :
+                    Est-ce que celle-ci se trouve déjà  en DB ?
                     2a) On a besoin d'une query et une connection PDO en Symfony c'est le 
                     repertoire Repository User et on va utiliser l'EntityManager et on va appeler User repository
-                    $repository =$entityManager->getRepository(Prestataire::class); V
-                    2b) On va appeler la méthode  findOneBy() du user Repository afin de pouvoir vérifier si l'email est en DB. V
+                    $repository = $entityManager->getRepository(Prestataire::class); V
+                    2b) On va appeler la méthode  findOneBy() du User Repository afin de pouvoir vérifier si l'email est en DB. V
                 3) Si l'émail se trouve en DB afficher le message d'erreur  : votre adresse email existe déjà veuillez vous connecter à votre compte
                 4) Sinon afficher un message de success en envoyant un email de confirmation d'inscription
              */
@@ -157,8 +158,7 @@ class RegistrationController extends AbstractController
             }
             // else si le mail est déjà en DB
             else {
-                //     dd("c'est quoi ça !");
-                //     # code...
+            
                 // message flash
                 $this->addFlash('verify_email_error', "votre adresse email existe déjà veuillez vous connecter à votre compte ");
 
@@ -184,7 +184,7 @@ class RegistrationController extends AbstractController
     /* 2ième partie de l'inscription */
     // 1. Vérifier l'émail
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, EntityManagerInterface $entityManager): Response
     {
 
         // Comment récupérer l'information dans l' URL    
@@ -216,13 +216,15 @@ class RegistrationController extends AbstractController
                 // Gestion de la confirmation du mail
                 $this->emailVerifier->handleEmailConfirmation($request, $prestataire);
             }
+
         } catch (VerifyEmailExceptionInterface $exception) {
+
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
             return $this->redirectToRoute('app_register');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
+        // handle  the flash message in your templates
         $this->addFlash('success', 'Votre adresse mail a bien été vérifiée');
 
         //
@@ -230,9 +232,17 @@ class RegistrationController extends AbstractController
         //dump( $this->getUser());
         //die();
 
+        /* CATEGORIES DE SERVICES */
+        // // je récupère les données catégories de ma DB
+        // $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
+
+        // // tableau des catégories
+        // $categories = $repositoryCategory->findAll();
+
         // return $this->redirectToRoute('app_home');
         return $this->redirectToRoute('app_inscription', [
             'id' => $prestataire->getId(),
+            // 'categories' => $categories,
 
         ]);
     }
@@ -296,7 +306,7 @@ class RegistrationController extends AbstractController
     /* Partie 3 : Finalisation de l'inscription PRESTATAIRE */
 
     //https://symfony.com/doc/current/routing.html#parameters-validation  int $id il passe bien : https://localhost:8000/inscription/28
-    // \d+  doit être un NOMBRE pour ne pas qu'on écrive n'importe quoi dans l'URL
+    // \d+  doit être un NOMBRE pour ne pas qu'on écrive n'importe quoi dans l'URL !!!
     #[
         Route(
             '/inscription/{id}',
@@ -391,8 +401,22 @@ class RegistrationController extends AbstractController
                 //  Change the redirect on success and handle or remove the flash message in your templates
                 $this->addFlash('success', 'Votre inscription comme PRESTATAIRE est bien validée !');
 
-                // return $this->redirectToRoute('app_home', ['id' => $prestataireInscrit->getId()]);
-                return $this->redirectToRoute('app_home');
+                /* CATEGORIES DE SERVICES */
+                    // je récupère les données catégories de ma DB
+                    $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
+
+                    // tableau des catégories
+                    $categories = $repositoryCategory->findAll();
+
+                /* Je vais faire une autre route pour ne pas rediriger vers app_home mais app_DetailInscription */
+                //return $this->redirectToRoute('app_home');
+                return $this->redirectToRoute('app_DetailInscriptionPrestataire', 
+                    [
+                        'id' => $prestataireInscrit->getId(),
+                        'categories' => $categories,
+                    ]
+                );
+                
             }
 
 
@@ -407,7 +431,29 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
     }
+    /* Partie 4 DETAIL fiche inscription prestataire*/
+    #[Route(
+        '/fininscriptionprestataire/{id}', 
+        name: 'app_DetailInscriptionPrestataire', 
+        requirements: ['id' => '\d+'], 
+        defaults: ['id' => 1],
+        )]
+    public function detailInscriptionPrestataire (Prestataire $prestataire, EntityManagerInterface $entityManager): Response
+    {
 
+    /* CATEGORIES DE SERVICES */
+        // je récupère les données catégories de ma DB
+        $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
+
+        // tableau des catégories
+        $categories = $repositoryCategory->findAll();
+
+        /* Partie 5.retourner une vue, un fichier TWIG pour la finalisation de l'inscription */
+        return $this->render('registration/detailinscriptionprestataire.html.twig', [
+            'prestataire' => $prestataire,
+            'categories' => $categories,
+        ]);
+    }
 
     /* Partie 3 Finalisation de l'inscription Internaute */
     // id' => '\d+ l'id doit être un chiffre
@@ -440,7 +486,6 @@ class RegistrationController extends AbstractController
             /* FORMULAIRE */
             $formInternaute = $this->createForm(InternauteType::class, $internauteInscrit);
 
-            /* Partie 4 formulaire */
             $formInternaute->handleRequest($request);
 
             if ($formInternaute->isSubmitted() && $formInternaute->isValid()) {
@@ -466,9 +511,13 @@ class RegistrationController extends AbstractController
                 // Message flash de success
                 $this->addFlash('success', 'Votre inscription comme INTERNAUTE est bien validée');
 
-                return $this->redirectToRoute('app_home');
+                // @TODO voir si c'est ici que je dois modifier la route !!!
+                return $this->redirectToRoute('app_DetailInscriptionInternaute', 
+                ['id' => $internauteInscrit->getId()],
+            );
             }
             $categories = $entityManager->getRepository(CategorieServices::class)->findAll();
+
             /* Partie 5.retourner une vue, un fichier TWIG */
             return $this->render('registration/inscriptioninternaute.html.twig', [
                 'registrationForm' => $formInternaute->createView(),
@@ -476,9 +525,25 @@ class RegistrationController extends AbstractController
 
             ]);
         } else {
-            $this->addFlash('error', 'Votre procédure d\'inscription a rencontré un problème, veullez recommencer');
+            $this->addFlash('error', 'Votre procédure d\'inscription a rencontré un problème, veuillez recommencer');
 
             return $this->redirectToRoute('app_home');
         }
+    }
+
+    /* Partie 4 Détail fiche inscription internaute */
+    #[Route(
+        '/fininscriptionInternaute/{id}', 
+        name: 'app_DetailInscriptionInternaute', 
+        requirements: ['id' => '\d+'], 
+        defaults: ['id' => 1],
+        )]
+    public function detailInscriptionInternaute (Internaute $internaute): Response
+    {
+        /* Partie 5.retourner une vue, un fichier TWIG pour la finalisation de l'inscription internaute */
+        return $this->render('registration/detailinscriptionInternaute.html.twig', [
+            'internaute' => $internaute,
+            
+        ]);
     }
 }

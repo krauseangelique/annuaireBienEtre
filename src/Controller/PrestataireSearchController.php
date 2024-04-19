@@ -12,17 +12,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route as AttributeRoute;
 
 class PrestataireSearchController extends AbstractController
 {
-    // #[Route('/prestataire/search', name: 'app_prestataire_search')]
-    // public function index(): Response
-    // {
-    //     return $this->render('prestataire_search/index.html.twig', [
-    //         'controller_name' => 'PrestataireSearchController',
-    //     ]);
-    // }
+    // Détail d'UN prestataire
+    #[Route('prestataire/detail/{id}', name: 'app_detailPrestataire')]
+    public function detailPrestataire(Prestataire $prestataire ): Response
+    {
+        return $this->render('prestataire_search/detailPrestataire.html.twig', [
 
+            'prestataire' => $prestataire,
+            
+            
+        ]);
+    }
     // 1.Faire appel à l'EntityManager
     #[Route('prestataire/search', name: 'app_prestataire_search')]
     public function search(Request $request, EntityManagerInterface $entityManager): Response

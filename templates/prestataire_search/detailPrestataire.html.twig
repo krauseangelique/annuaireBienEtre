@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail du Prestataire
+{% endblock %}
+
+{% block content %}
+	<div class="border my-3">
+		<h1>Fiche : Détail de votre Prestataire</h1>
+		<div class="d-flex p-2 bd-highlight">
+			<div class="col-sm-6 border my-3">
+				<h2 class="fw-bold">
+					{{prestataire.nom}}</h2>
+				<h2>Adresse</h2>
+				<p>Province :
+					{{prestataire.adresseProvince|upper}}</p>
+				<p>Code postal:
+					{{prestataire.adresseCP}}</p>
+				<p>Commune :
+					{{prestataire.commune }}</p>
+				<p>Nom de la rue :
+					{{prestataire.adresseRue}}</p>
+				<p>Numéro du commerce :
+					{{prestataire.adresseNum}}</p>
+				<h2>Pour contacter le prestataire</h2>
+				<p>numéro de tel :
+					{{prestataire.numTel}}</p>
+				<p>site Internet :
+					{{prestataire.siteInternet}}</p>
+
+				<p>catégorie(s) :
+    {% for cat in prestataire.categorieServices %}
+        {{cat}} /
+    {% endfor %}
+    </p> 
+
+				<p>numéro de TVA :
+					{{prestataire.numTVA}}</p>
+			</div>
+			<div class="col-sm-6 border my-3">Ici vient la photo ou le logo du prestataire
+			</div>
+		</div>
+	</div>
+
+	
+{% endblock %}

@@ -52,11 +52,13 @@ class PrestataireSearchType extends AbstractType
                 'class' => Commune::class,
 'choice_label' => 'commune',
             ])
+
 //             ->add('categorieServices', EntityType::class, [
 //                 'class' => CategorieServices::class,
 // 'choice_label' => 'nom',
 // 'multiple' => true,
 //             ])
+
 ->add('categorieServices', ChoiceType::class, [
     'choices' =>[
         'barbier'   => 'barbier',
@@ -70,6 +72,7 @@ class PrestataireSearchType extends AbstractType
     'required' => false,
     'expanded' => false,
 ])
+
 //             ->add('internautesFavoris', EntityType::class, [
 //                 'class' => Internaute::class,
 // 'choice_label' => 'id',

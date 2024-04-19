@@ -21,9 +21,14 @@
 
                 <h1 class="h3 my-3 font-weight-normal">Me Connecter</h1>
                 <label for="inputEmail">Email</label>
-                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                <input type="email" value="{{ last_email }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
                 <label for="inputPassword">Mot de passe</label>
                 <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+    {# The key "_username" must be a string, "NULL" given. #}
+                <input type="hidden" name="_username"
+                    value="{{ last_email }}"
+                >
 
                 <input type="hidden" name="_csrf_token"
                     value="{{ csrf_token('authenticate') }}"

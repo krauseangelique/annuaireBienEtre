@@ -1,0 +1,29 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Détail FICHE  d'inscription Internaute
+{% endblock %}
+
+{% block body %}
+
+    {% for flash_error in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    {% for flash_success in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flash_success }}</div>
+    {% endfor %}
+
+    <div class="example-wrapper">
+        <h1>FICHE  d'inscription Internaute (Détails) </h1>
+    </div>
+
+    <h2>Votre inscription en tant qu'INTERNAUTE </h2>
+
+    <p class="fw-bold">Internaute nom : {{internaute.nom }}</p>
+    <p>Internaute prenom : {{internaute.prenom }}</p>
+    
+
+    {# Fin du formulaire #}
+
+    <a class="btn btn-primary" href="{{path('app_home')}}"> < retour à la page d'accueil</a>
+
+{% endblock %}
