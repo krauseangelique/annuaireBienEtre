@@ -47,8 +47,8 @@ class PrestataireSearchController extends AbstractController
         $categorieServices = $request->request->get('categorieDeService');
         $commune = $request->request->get('commune');
 
-        $adresseCP = $request->request->get('adresseCP');
-        // @TODO  !!! dd($adresseCP); PrestataireSearchController.php on line 51:null je devrais récupérer normalement l'id du CP
+        $adresseCP = $request->request->get('codepostal');
+        // dd($adresseCP); //20
 
         $adresseProvince = $request->request->get('province');
     

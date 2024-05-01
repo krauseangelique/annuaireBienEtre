@@ -56,12 +56,12 @@ class PrestataireRepository extends ServiceEntityRepository
             ->setParameter('commune', $commune);
         }
 
-        if($adresseCP !== null){
+        if($adresseCP !== ""){
             $queryBuilder->andWhere('p.adresseCP = :adresseCP')
             ->setParameter('adresseCP', $adresseCP);
         }
 
-        if($adresseProvince !== null){
+        if($adresseProvince !== ""){
             $queryBuilder->andWhere('p.adresseProvince = :adresseProvince')
             ->setParameter('adresseProvince', $adresseProvince);
 
