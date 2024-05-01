@@ -31,8 +31,9 @@ Recherche Prestataire - Annuaire bien-être
 				{% endfor %}
 			</select>
 
-			{# <label for="commune">Sur la commune</label>
-						<input type="text" name="commune" id="commune"> #}
+			{#  <label for="commune">Sur la commune</label>
+				<input type="text" name="commune" id="commune"> #}
+
 			<label for="cp-select">Sur le code postal</label>
 			<select name="codepostal" id="cp-select">
 				<option value="">-- choisissez votre code postal --</option>
@@ -53,7 +54,7 @@ Recherche Prestataire - Annuaire bien-être
 
 		</fieldset>
 
-		<input type="submit" value="Rechercher">
+		<input type="submit" value="Rechercher" class="mt-3">
 	</form>
 
 {% endblock %}

@@ -3,16 +3,19 @@ security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\User:
+            algorithm: auto
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        # users_in_memory: { memory: null } # ce qui se trouve dans providers cf. cours Natacha SUIVI https://symfony.com/doc/current/security.html#the-user
+        # users_in_memory: { memory: null } # ce qui se trouve dans providers cf. cours Natacha SUIVI https://symfony.com/doc/current/security.html#the-user  Table of Contents # The User ° Loading the User: The UserProvider
 
         app_user_provider:
             entity:
                 class: App\Entity\User
                 # class: App\Entity\Prestataire
-                property: email
+                property: email  
+                # https://symfony.com/doc/current/security.html#the-firewall Table of Contents #The User °Loading the User: The UserProvider. The configuration above uses Doctrine to load the User entity using the email property as "user identifier". 
                 # optional: if you're using multiple Doctrine entity
                 # optional: 
                 #     class: App\Entity\Prestataire
@@ -25,8 +28,19 @@ security:
         main:
             lazy: true
             # https://stackoverflow.com/questions/62823232/symfony-5-keeps-redirecting-from-the-register-route
-            #provider: users_in_memory
+            # provider: users_in_memory
             provider: app_user_provider
+            # custom_authentificator va gérer le nom de notre Authenticator min 3:06/47:21
+            # Deprecation about privider for custom_authenticators for multiple authenticators written with the new  auth manager system https://github.com/symfony/symfony/issues/44362  entry_point requière form_login car c'est un service donc il ne faut pas indiquer la route app_login
+            custom_authenticators: 
+                - App\Security\UsersAuthenticator
+            entry_point: form_login
+        
+            logout:
+                path: app_logout
+            # where to redirect after logout
+                target: app_home
+
             # https://symfony.com/doc/current/security/access_denied_handler.html
             # entry_point: App\Security\AuthenticationEntryPoint
             # activate different ways to authenticate
@@ -37,11 +51,6 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-        
-            logout:
-                path: app_logout
-            # where to redirect after logout
-                target: app_home
 
         # activate different ways to authenticate
         #https:// symfony.com/doc/current/security/impersonating_user.html

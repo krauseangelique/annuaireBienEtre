@@ -2,10 +2,10 @@
 
 namespace App\Security;
 
-use Symfony\Bundle\SecurityBundle\Security as SecurityBundleSecurity;
-use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\SecurityBundle\Security ;
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Security;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Twig\Sandbox\SecurityError;
 
@@ -44,10 +44,23 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
         // On récupère en POST l'email
         $email = $request->request->get('email', '');
 
+        // Est ce que peux appeler un Controller dans une méthode
+
+
+        $id = $request->request->get('id', '');
+        // Recherche de l'identifiant id de l'utilisateur
+
+
+
+        // dump($id);
+        // dd($request);
+
+
+
         // Dans la session on récupère le dernier utilisateur qui a été tapé
-        // $request->getSession()->set(SecurityBundle::LAST_USERNAME, $email);
-        $request->getSession()->set(Security::LAST_USERNAME, $email);
-    
+        
+        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME , $email);
+        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME , $id);
     
 
        // $request->getSession()->set('_security.last_username', $email);
@@ -56,7 +69,7 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
             // le UserBadge va permettre d'aller rechercher l'utilisateur ici par son email
             new UserBadge($email),
 
-            // va récupérer le mot de passe tapé par l'utilisateur => credentials = identifiants
+            // va récupérer le mot de passe tapé par l'utilisateur => credentials = identifiants 
             new PasswordCredentials($request->request->get('password', '')),
             [
                 // jeton token de sécurité qui authentifie que le formulaire vient bien de notre application (site)
@@ -78,6 +91,7 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
         // je vais rediriger mon utilisateur vers home (main dans la vidéo min 10:30)
         // return new RedirectResponse($this->urlGenerator->generate('some_route'));
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
+        
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 

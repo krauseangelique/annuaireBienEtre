@@ -42,15 +42,19 @@ class PrestataireSearchType extends AbstractType
 
             ->add('adresseCP', EntityType::class, [
                 'class' => CodePostal::class,
-'choice_label' => 'codePostal',
+                'choice_label' => 'codePostal',
+                'required' => false,
+
             ])
             ->add('adresseProvince', EntityType::class, [
                 'class' => Province::class,
-'choice_label' => 'province',
+                'choice_label' => 'province',
+                'required' => false,
             ])
             ->add('commune', EntityType::class, [
                 'class' => Commune::class,
-'choice_label' => 'commune',
+                'choice_label' => 'commune',
+                'required' => false,
             ])
 
 //             ->add('categorieServices', EntityType::class, [
@@ -66,7 +70,6 @@ class PrestataireSearchType extends AbstractType
         'esthéticienne' => 'esthéticienne',
         'pédicure'  => 'pédicure',
         'centre de spa et balnéothérapie' => 'centre de spa et balnéothérapie',
-        'massage'   => 'massage',
         'medecines alternatives' => 'medecines alternatives',
     ],
     'required' => false,

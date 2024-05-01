@@ -95,13 +95,18 @@
 				{{ form_widget(registrationForm.adresseNum, {'attr': {'class': 'form-control'}}) }}
 				{{ form_errors(registrationForm.adresseNum) }}
 			</div>
-			{# 
-				<button type="submit" id="prestataire_Sauvegarder" name="prestataire[Sauvegarder]" class="btn-primary btn">Enregistrer vos données pour finaliser votre inscription</button>
-			#}
+			
 			
 			{# Fin du formulaire #}
 			<div class="form-group">
-				<button type="submit" class="btn btn-primary">Soumettre</button>
+			{# 
+				
+
+
+    <a class="btn btn-primary" href="{{path('app_home')}}"> << retour à la page d'accueil</a>
+			#}
+				{# <a class="btn btn-primary" href="{{path('app_login')}}">Enregistrer vos données pour finaliser votre inscription</a> #}
+				<input type="submit" class="btn btn-primary m-3" value="Enregistrer vos données pour finaliser votre inscription">
 			</div>
 		</div>
 	{{ form_end(registrationForm)}}

@@ -6,10 +6,9 @@ use App\Repository\CommuneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: CommuneRepository::class)]
-#[Broadcast]
+
 class Commune
 {
     #[ORM\Id]
@@ -57,6 +56,7 @@ class Commune
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
+            
             $user->setCommune($this);
         }
 

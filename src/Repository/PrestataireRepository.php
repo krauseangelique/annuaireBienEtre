@@ -62,7 +62,7 @@ class PrestataireRepository extends ServiceEntityRepository
         }
 
         if($adresseProvince !== null){
-            $queryBuilder->andWhere()('p.adresseProvince = :adresseProvince')
+            $queryBuilder->andWhere('p.adresseProvince = :adresseProvince')
             ->setParameter('adresseProvince', $adresseProvince);
 
         }

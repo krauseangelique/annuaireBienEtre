@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Connexion {% endblock %}
+{% block title %} me connecter {% endblock %}
 
 {% block body %}
 
@@ -8,7 +8,7 @@
     <div class = "row">
         <div class = "col">
             <form method="post">
-                {# Le if ici va permettre de vérifier dans mon security control si j'ai une erreur #}
+                {# Le if ici va permettre de vérifier dans mon security controller si j'ai une erreur #}
                 {% if error %}
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
@@ -25,10 +25,11 @@
                 <label for="inputPassword">Mot de passe</label>
                 <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
+                {# https://www.youtube.com/watch?v=zXCeT2dGUOY  Inscription et Authentification des utilisateurs (Symfony 7)  #}
+
     {# The key "_username" must be a string, "NULL" given. #}
-                <input type="hidden" name="_username"
-                    value="{{ last_email }}"
-                >
+                <input type="hidden" name="_username" 
+                    value="{{ last_email }}" >
 
                 <input type="hidden" name="_csrf_token"
                     value="{{ csrf_token('authenticate') }}"

@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block content %}
+	<div class="col-10 border">
 	<h1>Annuaire Bien-Etre</h1>
 	<p>Bienvenu sur le site
 		<span class='bold'>Annuaire Bien-Etre</span>
@@ -21,7 +22,7 @@
 	<p>En tant qu'internaute, vous retrouverez au même endrois une multitude de services et de prestataires dédiés au  'bien-être'.<br>
 		N'hésitez pas à faire votre choix parmis nos diverses catégories de services.</p>
 	<h2>Nos 4 derniers prestataires de services inscrits : </h2>
-	<div>
+	
 		<form class="global me-4 ps-1" method="POST">
 
 			{# <select class="beau" name="categorieDeService" multiple> #}
@@ -39,6 +40,7 @@
 
 		</form>
 	</div>
+	
 	<script>
 			document.addEventListener('DOMContentLoaded', function() {
 				const selectElement = document.getElementById('listePrestataire');
@@ -52,4 +54,10 @@
 				});
 			});
 		</script>
+		</div>
+		<div class="col-4 border">
+							{% block slider %}
+								<p>le slider</p>
+							{% endblock %}
+						</div>
 {% endblock %}

@@ -315,6 +315,7 @@ class RegistrationController extends AbstractController
             defaults: ['id' => 1],
         )
     ]
+    // https://symfony.com/doc/current/security.html#the-firewall Table of Contents #The User ° Loading the User: The User Provider ° Registering the User: Hashing Passwords ligne ligne 10 !!!
     // Hash du Password
     public function inscription(Request $request, int $id, EntityManagerInterface $entityManager, UserPasswordHasherInterface $prestatairePasswordHasher): Response
     {
@@ -334,11 +335,12 @@ class RegistrationController extends AbstractController
         // test conditionnel
         if ($id >= 1) {
 
-            // appel de la méthode isInscriptConfirmee() sur l'objet $prestataireInscrit C'est pour sortir les 4 derniers prestataires inscrit
+            // appel de la méthode isInscriptConfirmee() 
             if ($prestataireInscrit->isInscriptConfirmee() == true) {
                 $this->addFlash('success', 'Votre inscription est bien confirmée');
 
                 return $this->redirectToRoute('app_home');
+            
             }
             // dump($prestataireInscrit->isInscriptConfirmee());
             // dd($prestataireInscrit);
@@ -360,13 +362,13 @@ class RegistrationController extends AbstractController
             /* Partie 4. Soumettre le formulaire */
 
             $form->handleRequest($request);
+    
+            
             if ($form->isSubmitted() && $form->isValid()) {
                 // $form->getData() holds the submitted values
                 // but, the original `$task` variable has also been updated
                 $task = $form->getData();
-                // Yes il tombe dans le dump and dd($task)
-                // dump("coucou");
-                // dd($task);
+                // dd($task);  Yesss ça marche ! Ca enregistre !
 
                 // ... perform some action, such as saving the task to the database
                 // persist et flush le prestataire
@@ -376,7 +378,7 @@ class RegistrationController extends AbstractController
 
                 // si je veux récupérer un champ de mon form je dois faire un get sur ce champ et chainer avec la méthode getData()
                 $plainPassword = $form->get('plainPassword')->getData();
-                // dd($plainPassword); il récupère bien le plainPlassword
+                // dd($plainPassword); // il récupère bien le plainPlassword RegistrationController.php on line 380: "prestataire30"
 
                 /* https://github.com/SymfonyCasts/verify-email-bundle#Overview lire le README et faire : 
                     composer require symfonycasts/verify-email-bundle */
@@ -384,8 +386,9 @@ class RegistrationController extends AbstractController
                 // hash du mot de passe de Verify-email-bundle
                 $prestataireInscrit->setPassword(
                     $prestatairePasswordHasher->hashPassword(
-                        $prestataireInscrit,
-                        $form->get('plainPassword')->getData()
+                        // 
+                        $prestataireInscrit, 
+                        $form->get('plainPassword')->getData() // c'est le $plainPassword donc le $plaintextPassword ligne 14 de https://symfony.com/doc/current/security.html#the-firewall Table of Contents #The User ° loading the User: ° Registering the User: Hashing Passwords
                     )
                 );
 
@@ -408,13 +411,15 @@ class RegistrationController extends AbstractController
                     // tableau des catégories
                     $categories = $repositoryCategory->findAll();
 
-                /* Je vais faire une autre route pour ne pas rediriger vers app_home mais app_DetailInscription */
+                /* Je vais faire une autre route pour ne pas rediriger vers app_home mais app_DetailInscription  vers app_login*/
                 //return $this->redirectToRoute('app_home');
-                return $this->redirectToRoute('app_DetailInscriptionPrestataire', 
-                    [
-                        'id' => $prestataireInscrit->getId(),
-                        'categories' => $categories,
-                    ]
+                // app_DetailInscriptionPrestataire
+                return $this->redirectToRoute('app_login', 
+                    // je n'ai pas à passer les informations du Prestataire en get donc pas 'id' ni 'categories'
+                    // [
+                    //     'id' => $prestataireInscrit->getId(),
+                    //     'categories' => $categories,
+                    // ]
                 );
                 
             }

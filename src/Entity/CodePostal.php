@@ -6,7 +6,7 @@ use App\Repository\CodePostalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+
 
 #[ORM\Entity(repositoryClass: CodePostalRepository::class)]
 
@@ -57,6 +57,7 @@ class CodePostal
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
+            // @TODO
             $user->setAdresseCP($this);
         }
 

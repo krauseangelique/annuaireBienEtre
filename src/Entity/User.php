@@ -28,10 +28,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    protected ?int $id = null;
+
+    #protected ?int $id = null;
+    protected ?int $id; // https://symfony.com/doc/current/security.html#the-user Table of Contents # The User ligne 15
 
     #[ORM\Column(length: 180, unique: true)]
-    protected ?string $email = null;
+    // protected ?string $email = null;
+    protected ?string $email; // https://symfony.com/doc/current/security.html#the-user Table of Contents # The User ligne 18
+
 
     // [ORM\Column(type: 'json')]
     // protected array $roles = [];
@@ -42,7 +46,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column(length: 255, nullable: true)]
-    protected ?string $password = null;
+    #protected ?string $password = null;
+    protected ?string $password;
+
+
+
 
     #[ORM\Column(length: 255, nullable: true)]
     protected ?string $adresseNum = null;
@@ -96,7 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->email = $email;
 
-        return $this;
+        return $this; // https://symfony.com/doc/current/security.html#the-user ligne 40
     }
 
     /**

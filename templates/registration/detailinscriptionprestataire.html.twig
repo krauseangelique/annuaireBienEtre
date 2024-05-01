@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Détail FICHE  d'inscription Prestataire
+{% block title %} Détail FICHE  d'inscription Prestataire
 {% endblock %}
 
 {% block body %}
@@ -14,7 +14,7 @@
 
 
     <div class="example-wrapper">
-        <h1>FICHE  d'inscription Prestataire</h1>
+        <h1>FICHE d'inscription Prestataire</h1>
     </div>
 
     <h2>Votre informations en tant que PRESTATAIRE</h2>
@@ -42,5 +42,6 @@
     {# Fin du formulaire #}
 
     <a class="btn btn-primary" href="{{path('app_home')}}"> << retour à la page d'accueil</a>
+    <a class="btn btn-primary" href="{{path('app_login')}}"> << connectez vous d'accueil >></a>
 
 {% endblock %}
