@@ -4,10 +4,10 @@ namespace App\Entity;
 
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
-#[Broadcast]
+
 class Image
 {
     #[ORM\Id]

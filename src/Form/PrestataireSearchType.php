@@ -5,14 +5,14 @@ namespace App\Form;
 use App\Entity\CategorieServices;
 use App\Entity\CodePostal;
 use App\Entity\Commune;
-use App\Entity\Internaute;
+
 use App\Entity\Prestataire;
 use App\Entity\Province;
-
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -44,7 +44,6 @@ class PrestataireSearchType extends AbstractType
                 'class' => CodePostal::class,
                 'choice_label' => 'codePostal',
                 'required' => false,
-
             ])
             ->add('adresseProvince', EntityType::class, [
                 'class' => Province::class,
@@ -57,30 +56,30 @@ class PrestataireSearchType extends AbstractType
                 'required' => false,
             ])
 
-//             ->add('categorieServices', EntityType::class, [
-//                 'class' => CategorieServices::class,
-// 'choice_label' => 'nom',
-// 'multiple' => true,
-//             ])
+            //             ->add('categorieServices', EntityType::class, [
+            //                 'class' => CategorieServices::class,
+            // 'choice_label' => 'nom',
+            // 'multiple' => true,
+            //             ])
 
-->add('categorieServices', ChoiceType::class, [
-    'choices' =>[
-        'barbier'   => 'barbier',
-        'coiffeur'  => 'coiffeur',
-        'esthéticienne' => 'esthéticienne',
-        'pédicure'  => 'pédicure',
-        'centre de spa et balnéothérapie' => 'centre de spa et balnéothérapie',
-        'medecines alternatives' => 'medecines alternatives',
-    ],
-    'required' => false,
-    'expanded' => false,
-])
+            ->add('categorieServices', EntityType::class, [
+                    'class' => CategorieServices::class,
+                    'choice_label' => 'nom',
+                    'expanded' => false,
+                    // TRI par ordre alphabétique voir p307 choice_label & query_builder
+                    'query_builder' => function (EntityRepository $repository) {
+                        return $repository->createQueryBuilder('cs')
+                        ->where('cs.actif = :actif')
+                        ->setParameter('actif', true)
+                        ->orderBy('cs.nom', 'ASC');
+                    },
+            ])
 
-//             ->add('internautesFavoris', EntityType::class, [
-//                 'class' => Internaute::class,
-// 'choice_label' => 'id',
-// 'multiple' => true,
-//             ])
+            //             ->add('internautesFavoris', EntityType::class, [
+            //                 'class' => Internaute::class,
+            // 'choice_label' => 'id',
+            // 'multiple' => true,
+            //             ])
         ;
     }
 
