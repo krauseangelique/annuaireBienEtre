@@ -9,7 +9,10 @@
         {# {% if prestataires|length == 0 %} 
             <p>Aucun résultat pour votre recherche !</p>   
         {% endif %} #}
-        <p>{{prestataires|length}} {% if prestataires|length  == 0 or prestataires|length == 1 %} résultat {% else %} résultats {% endif %} pour votre recherche </p>
+        <p>{{prestataires|length}} 
+            {% if prestataires|length  == 0 or prestataires|length == 1 %} résultat 
+            {% else %} résultats 
+            {% endif %} pour votre recherche </p>
 
         {% for prestataire in prestataires %} 
         <div class="border my-3">

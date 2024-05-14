@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
-#[Broadcast]
+
 class Image
 {
     #[ORM\Id]
@@ -18,6 +18,7 @@ class Image
     #[ORM\Column(nullable: true)]
     private ?int $ordre = null;
 
+    // le chemin de mon image est en string et c'est représenté par $image
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
@@ -143,5 +144,9 @@ class Image
         $this->photoPrestataire = $photoPrestataire;
 
         return $this;
+    }
+    public function __toString()
+    {
+        return $this->image;
     }
 }

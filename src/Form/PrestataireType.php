@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -31,6 +32,7 @@ class PrestataireType extends AbstractType
     // première méthode le buildForm()
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         // CONFIRMATION de l'inscription FICHE SIGNALETIQUE COMPLETE
         $builder
             //->add('email', EmailType::class)
@@ -97,6 +99,14 @@ class PrestataireType extends AbstractType
 'expanded' => true,
 'required' => false,
             ])
+
+            /* ajout d'un champ pour l'upload d'image du logo */
+            ->add('logo', FileType::class, [
+                'mapped' => false,
+                'label' => 'uploader votre logo( .png, .jpg, .webp, .svg)',
+                'required' => false,
+            ])
+            
 //             ->add('internautesFavoris', EntityType::class, [
 //                 'class' => Internaute::class,
 // 'choice_label' => 'id',

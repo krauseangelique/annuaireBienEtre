@@ -67,6 +67,7 @@ Mot de passe :
         // https://nouvelle-techno.fr/articles/5-inscription-et-authentification-des-utilisateurs-symfony-6
 
         // if ($this->getUser()) {
+        //    
         //     return $this->redirectToRoute('target_path');
         // }
 
