@@ -95,7 +95,22 @@
 				{{ form_widget(registrationForm.adresseNum, {'attr': {'class': 'form-control'}}) }}
 				{{ form_errors(registrationForm.adresseNum) }}
 			</div>
+			<div class="form-group">
+				{{ form_label(registrationForm.logo) }}
+				{{ form_widget(registrationForm.logo, {'attr': {'class': 'form-control'}}) }}
+				{{ form_errors(registrationForm.logo) }}
+			</div>
 			
+
+		{# 
+			  /* ajout d'un champ pour l'upload d'image du logo */
+            ->add('logo', FileType::class, [
+                'mapped' => false,
+                'label' => 'uploader votre logo( .png, .jpg, .webp, .svg)',
+                'required' => false,
+            ])
+		#}
+
 			
 			{# Fin du formulaire #}
 			<div class="form-group">

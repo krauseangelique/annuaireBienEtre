@@ -6,7 +6,16 @@
 
 <section class="container">
     <div class = "row">
-        <div class = "col">
+        <div class = "col">  
+        {# message flash #}
+            {% include 'flash_message/message_flash.html.twig' %}
+        
+                {# {% for flash_error in app.flashes('error') %}
+                    <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                {% endfor %}
+                {% for flash_success in app.flashes('success') %}
+                    <div class="alert alert-success" role="alert">{{ flash_success }}</div>
+                {% endfor %} #}
             <form method="post">
                 {# Le if ici va permettre de vérifier dans mon security controller si j'ai une erreur #}
                 {% if error %}
