@@ -111,7 +111,30 @@ details > p {
 	color: #ddd;
 	font-size: 1.1em;
 }
+.userConnection {
+    font-size: small;
+}
+.footDeconnect {
+    background-color: #9800B0;
+    border-color: #9800B0;
+    margin-top : 1rem;
+    font-size: 1.25rem;
+    border-radius: .3rem;
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    padding-bottom: 1rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+.footDeconnect a {
+    color: #ddd;
+    align-items: center;
+}
 
-.border-solid{
+.border-solid {
     border: 1px solid orange;
+}
+.blue{
+    border: 3px solid blue; 
 }

@@ -90,9 +90,10 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
         // For example: ma route pour le HomeController app_home
         // je vais rediriger mon utilisateur vers home (main dans la vidéo min 10:30)
         // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        return new RedirectResponse($this->urlGenerator->generate('app_home'));
+        return new RedirectResponse($this->urlGenerator->generate('app_home')); //app_detailPrestataire attention chercher comment passer l'id error MissingMandatoryParametersExceptionHTTP 500 Internal Server Error Some mandatory parameters are missing ("id") to generate a URL for route "app_detailPrestataire".
         
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        
     }
 
     protected function getLoginUrl(Request $request): string

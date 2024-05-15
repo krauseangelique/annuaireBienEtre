@@ -28,18 +28,34 @@
 					{{prestataire.siteInternet}}</p>
 
 				<p>catégorie(s) :
-    {% for cat in prestataire.categorieServices %}
-        {{cat}} /
-    {% endfor %}
-    </p> 
+					{% for cat in prestataire.categorieServices %}
+						{{cat}}
+						/
+					{% endfor %}
+				</p>
 
 				<p>numéro de TVA :
 					{{prestataire.numTVA}}</p>
 			</div>
-			<div class="col-sm-6 border my-3">Ici vient la photo ou le logo du prestataire
+			{# ICI IMAGES ET LOGOS du prestataire #}
+			<div class="col-sm-6 border my-3">
+				<p>LOGO / IMAGES</p>
+				{% for src in prestataire.logo %}
+				{# <p>{{prestataires|length}} 
+            {% if prestataires|length  == 0 or prestataires|length == 1 %} résultat 
+            {% else %} résultats 
+            {% endif %} pour votre recherche </p> #}
+
+					<div class="picture">
+					
+					<img src='/images/logoPrestataire/{{src}}' alt="" width="180" height="auto">
+					/
+					</div>
+				{% endfor %}
+
 			</div>
 		</div>
 	</div>
 
-	
+
 {% endblock %}

@@ -15,7 +15,7 @@ class Prestataire extends User
 {
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $nom = null;
+    private ?string $nom = null; // $nom est la variable qu'on peut aussi appeler 'attribut'
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $siteInternet = null;

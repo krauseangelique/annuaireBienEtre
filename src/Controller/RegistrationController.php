@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\CategorieServices;
+use App\Entity\Image;
 use App\Entity\Internaute;
 use App\Entity\Prestataire;
 use App\Entity\User;
@@ -15,13 +16,14 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -158,7 +160,7 @@ class RegistrationController extends AbstractController
             }
             // else si le mail est déjà en DB
             else {
-            
+
                 // message flash
                 $this->addFlash('verify_email_error', "votre adresse email existe déjà veuillez vous connecter à votre compte ");
 
@@ -216,7 +218,6 @@ class RegistrationController extends AbstractController
                 // Gestion de la confirmation du mail
                 $this->emailVerifier->handleEmailConfirmation($request, $prestataire);
             }
-
         } catch (VerifyEmailExceptionInterface $exception) {
 
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
@@ -317,7 +318,7 @@ class RegistrationController extends AbstractController
     ]
     // https://symfony.com/doc/current/security.html#the-firewall Table of Contents #The User ° Loading the User: The User Provider ° Registering the User: Hashing Passwords ligne ligne 10 !!!
     // Hash du Password
-    public function inscription(Request $request, int $id, EntityManagerInterface $entityManager, UserPasswordHasherInterface $prestatairePasswordHasher): Response
+    public function inscription(Request $request, int $id, EntityManagerInterface $entityManager, UserPasswordHasherInterface $prestatairePasswordHasher, SluggerInterface $slugger): Response
     {
 
         // Récupération de l'id 
@@ -340,7 +341,6 @@ class RegistrationController extends AbstractController
                 $this->addFlash('success', 'Votre inscription est bien confirmée');
 
                 return $this->redirectToRoute('app_home');
-            
             }
             // dump($prestataireInscrit->isInscriptConfirmee());
             // dd($prestataireInscrit);
@@ -362,8 +362,8 @@ class RegistrationController extends AbstractController
             /* Partie 4. Soumettre le formulaire */
 
             $form->handleRequest($request);
-    
-            
+
+
             if ($form->isSubmitted() && $form->isValid()) {
                 // $form->getData() holds the submitted values
                 // but, the original `$task` variable has also been updated
@@ -387,41 +387,82 @@ class RegistrationController extends AbstractController
                 $prestataireInscrit->setPassword(
                     $prestatairePasswordHasher->hashPassword(
                         // 
-                        $prestataireInscrit, 
+                        $prestataireInscrit,
                         $form->get('plainPassword')->getData() // c'est le $plainPassword donc le $plaintextPassword ligne 14 de https://symfony.com/doc/current/security.html#the-firewall Table of Contents #The User ° loading the User: ° Registering the User: Hashing Passwords
                     )
                 );
 
                 // $userRepository->upgradePassword($prestataireInscrit, $plainPassword);
                 // Inscription CONFIRMEE
-                // Dés que j'ai vérifié que en DB j'ai bien persisté mon Password haché, je vais confirmer mon inscription et settant à TRUE l'inscription confirmée
+                // Dés que j'ai vérifié que en DB j'ai bien persisté mon Password haché, je vais confirmer mon inscription en settant à TRUE l'inscription confirmée
                 $prestataireInscrit->setInscriptConfirmee(true);
 
 
+                /* LES IMAGES */
+                // Logo du Prestataire
+                $prestataireLogoFile = $form->get('logo')->getData();
+                if(isset($prestataireLogoFile)){
+
+            
+                    // Maintenant je dois traiter mon fichier : la première action à effectuer lors du chargement d'un fichier transmis par un utilisateur est de vérifier sa validité.Ici on le vérifiera via la méthode  isValid() p312 pdf Symfony5
+                    if ($prestataireLogoFile->isValid()) {
+
+                        // SI l'image (le fichier) EXISTE alors on traite l'image @TODO !!! isset() - Détermine si une variable est déclarée et est différente de null https://www.php.net/manual/fr/function.isset.php Est-ce que je dois l'utiliser ici au cas où le prestataire ne proposerait pas d'image de logo pour le représenter dans la 2ème partie du formulaire
+                    
+                        $originalFilename = pathinfo($prestataireLogoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                        // this is needed to safely include the file name as part of the URL
+                        $safeFilename = $slugger->slug($originalFilename);
+
+                        $newFilename = $safeFilename . '-' . uniqid() . '.' .
+                            pathinfo($prestataireLogoFile->getClientOriginalName(), PATHINFO_EXTENSION);
+
+                        // pour capturer les erreurs
+                        try {
+                            // je vais enregistrer mon fichier p313 du pdf eni Symfony5
+                            $prestataireLogoFile->move('images/logoPrestataire', $newFilename);
+                        } catch (FileException $e) {
+                            // ... handle exception if something happens during file upload
+                            exit("upload non réussi");
+                        }
+
+                        // création d'un objet LOGO
+                        $logo = new Image;
+
+                        $logo->setImage($newFilename);
+                        // je passe les données de l'objet
+                        $logo->setPrestataire($prestataireInscrit);
+                    }
+                    // On va utiliser l'Entity manager pour persit les données (préparation de la requête) et flush pour mettre en DB (exécution de la requête)
+                    $entityManager->persist($logo);
+
+                }
+
                 $entityManager->persist($prestataireInscrit);
                 $entityManager->flush();
+
+
 
                 //  Change the redirect on success and handle or remove the flash message in your templates
                 $this->addFlash('success', 'Votre inscription comme PRESTATAIRE est bien validée !');
 
                 /* CATEGORIES DE SERVICES */
-                    // je récupère les données catégories de ma DB
-                    $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
+                // je récupère les données catégories de ma DB
+                $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
 
-                    // tableau des catégories
-                    $categories = $repositoryCategory->findAll();
+                // tableau des catégories
+                $categories = $repositoryCategory->findAll();
 
                 /* Je vais faire une autre route pour ne pas rediriger vers app_home mais app_DetailInscription  vers app_login*/
                 //return $this->redirectToRoute('app_home');
                 // app_DetailInscriptionPrestataire
-                return $this->redirectToRoute('app_login', 
+                return $this->redirectToRoute(
+                    'app_login',
                     // je n'ai pas à passer les informations du Prestataire en get donc pas 'id' ni 'categories'
                     // [
                     //     'id' => $prestataireInscrit->getId(),
                     //     'categories' => $categories,
                     // ]
                 );
-                
             }
 
 
@@ -438,15 +479,15 @@ class RegistrationController extends AbstractController
     }
     /* Partie 4 DETAIL fiche inscription prestataire*/
     #[Route(
-        '/fininscriptionprestataire/{id}', 
-        name: 'app_DetailInscriptionPrestataire', 
-        requirements: ['id' => '\d+'], 
+        '/fininscriptionprestataire/{id}',
+        name: 'app_DetailInscriptionPrestataire',
+        requirements: ['id' => '\d+'],
         defaults: ['id' => 1],
-        )]
-    public function detailInscriptionPrestataire (Prestataire $prestataire, EntityManagerInterface $entityManager): Response
+    )]
+    public function detailInscriptionPrestataire(Prestataire $prestataire, EntityManagerInterface $entityManager): Response
     {
 
-    /* CATEGORIES DE SERVICES */
+        /* CATEGORIES DE SERVICES */
         // je récupère les données catégories de ma DB
         $repositoryCategory = $entityManager->getRepository(CategorieServices::class);
 
@@ -468,7 +509,7 @@ class RegistrationController extends AbstractController
         requirements: ['id' => '\d+'],
         defaults: ['id' => 1],
     )]
-    
+
     // Hash du Password
     public function inscriptioninternaute(Request $request, int $id, EntityManagerInterface $entityManager, UserPasswordHasherInterface $internautePasswordHasher): Response
     {
@@ -512,14 +553,15 @@ class RegistrationController extends AbstractController
 
                 $entityManager->persist($internauteInscrit);
                 $entityManager->flush();
-                
+
                 // Message flash de success
                 $this->addFlash('success', 'Votre inscription comme INTERNAUTE est bien validée');
 
                 // @TODO voir si c'est ici que je dois modifier la route !!!
-                return $this->redirectToRoute('app_DetailInscriptionInternaute', 
-                ['id' => $internauteInscrit->getId()],
-            );
+                return $this->redirectToRoute(
+                    'app_DetailInscriptionInternaute',
+                    ['id' => $internauteInscrit->getId()],
+                );
             }
             $categories = $entityManager->getRepository(CategorieServices::class)->findAll();
 
@@ -538,17 +580,17 @@ class RegistrationController extends AbstractController
 
     /* Partie 4 Détail fiche inscription internaute */
     #[Route(
-        '/fininscriptionInternaute/{id}', 
-        name: 'app_DetailInscriptionInternaute', 
-        requirements: ['id' => '\d+'], 
+        '/fininscriptionInternaute/{id}',
+        name: 'app_DetailInscriptionInternaute',
+        requirements: ['id' => '\d+'],
         defaults: ['id' => 1],
-        )]
-    public function detailInscriptionInternaute (Internaute $internaute): Response
+    )]
+    public function detailInscriptionInternaute(Internaute $internaute): Response
     {
         /* Partie 5.retourner une vue, un fichier TWIG pour la finalisation de l'inscription internaute */
         return $this->render('registration/detailinscriptionInternaute.html.twig', [
             'internaute' => $internaute,
-            
+
         ]);
     }
 }

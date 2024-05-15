@@ -7,7 +7,7 @@ Recherche Prestataire - Annuaire bien-être
 
 
 	{# dans l'attribut action je vais mettre la route pour que le serveur accède aux informations du formulaire #}
-		<form method="post" action="{{ path('app_prestataire_search') }}"> <fieldset>
+		<form  method="post" action="{{ path('app_prestataire_search') }}"> <fieldset>
 			<legend>Votre recherche</legend>
 			<!-- Titre du fieldset -->
 
@@ -54,7 +54,7 @@ Recherche Prestataire - Annuaire bien-être
 
 		</fieldset>
 
-		<input type="submit" value="Rechercher" class="mt-3">
+		<input type="submit" value="Rechercher" class="mb-3 mt-3">
 	</form>
 
 {% endblock %}
