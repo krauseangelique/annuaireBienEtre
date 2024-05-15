@@ -135,3 +135,6 @@ details > p {
 .border-solid {
     border: 1px solid orange;
 }
+.blue{
+    border: 3px solid blue; 
+}
