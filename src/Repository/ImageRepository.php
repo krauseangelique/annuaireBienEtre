@@ -46,7 +46,7 @@ class ImageRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-    // requête personnalisée recherchant en DB les images commençant par pexels
+    // requête personnalisée recherchant en DB les images commençant par pexels qui correspondent aux logos des prestataires
     public function startWith($value = "pexels"){
         return $this->createQueryBuilder('i')
                     ->andwhere('i.image LIKE :val')

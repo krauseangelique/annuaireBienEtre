@@ -12,7 +12,7 @@
         <p>{{prestataires|length}} 
             {% if prestataires|length  == 0 or prestataires|length == 1 %} résultat 
             {% else %} résultats 
-            {% endif %} pour votre recherche </p>
+            {% endif %} pour votre recherche</p>
 
         {% for prestataire in prestataires %} 
         <div class="border my-3">
@@ -20,7 +20,7 @@
         {# je dois transformer mes objets prestataire.commune en des strings revoir la théorie en POO  VOIR fichier Entity User.php méthode __toString() #}
         
             {% for categorie in categories %}
-            <p>nom de la catégorie: {{categorie}}</p> 
+            <p>nom de la catégorie: {{categorie.nom}}</p> 
             {% endfor %}
             <p class="fw-bold">nom du prestataire : {{prestataire.nom}}</p>
 
