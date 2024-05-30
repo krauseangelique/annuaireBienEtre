@@ -118,6 +118,7 @@ class Prestataire extends User
      */
     public function getCategorieServices(): Collection
     {
+        // l'attribut categorieServices
         return $this->categorieServices;
     }
 

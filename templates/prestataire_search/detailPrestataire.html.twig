@@ -7,7 +7,7 @@
 	<div class="border my-3">
 		<h1>Fiche : Détail de votre Prestataire</h1>
 		<div class="d-flex p-2 bd-highlight">
-			<div class="col-sm-6 border my-3">
+			<div class="col-sm-4 border my-3">
 				<h2 class="fw-bold">
 					{{prestataire.nom}}</h2>
 				<h2>Adresse</h2>
@@ -38,7 +38,7 @@
 					{{prestataire.numTVA}}</p>
 			</div>
 			{# ICI IMAGES ET LOGOS du prestataire #}
-			<div class="col-sm-6 border my-3">
+			<div class="col-sm-4 border my-3">
 				<p>LOGO / IMAGES</p>
 				{% for src in prestataire.logo %}
 				{# <p>{{prestataires|length}} 
@@ -53,6 +53,23 @@
 					</div>
 				{% endfor %}
 
+			</div>
+			<div class="col-sm-4 border my-3">
+				<h2 class="fw-bold">Promotions du moment :  
+				</h2>
+				<p>Promo(s) : </p>
+				{# Attention en TWIG il faut formater sa date #}
+				{% for promo in prestataire.promotion %}
+					<p> 
+						{{promo.nom}} :
+					</p>
+					<p> <i>
+					{{promo.description}} </i></p>
+					<p>date de début : {{promo.debut|date("d/m/Y", "Europe/Paris")}}</p>
+					<p>date de fin : {{promo.fin|date("d/m/Y", "Europe/Paris")}}</p>
+
+				
+				{% endfor %}
 			</div>
 		</div>
 	</div>

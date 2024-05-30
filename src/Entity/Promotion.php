@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: PromotionRepository::class)]
-#[Broadcast]
+
 class Promotion
 {
     #[ORM\Id]
@@ -154,5 +154,10 @@ class Promotion
         $this->prestataire = $prestataire;
 
         return $this;
+    }
+     // ajout de la méthode __toString() pour permettre de transformer un objet en string
+    public function __toString()
+    {
+        return $this->getNom();
     }
 }

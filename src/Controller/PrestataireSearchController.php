@@ -86,7 +86,7 @@ class PrestataireSearchController extends AbstractController
         return $this->render('prestataire_search/listePrestataire.html.twig', [
 
             'prestataires' => $resultatRecherches,
-            'categories'   => $categorieServices,
+            // 'categories'   => $categorieServices,
             
         ]);
     }

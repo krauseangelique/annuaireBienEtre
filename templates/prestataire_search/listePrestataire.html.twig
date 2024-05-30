@@ -17,16 +17,21 @@
         {% for prestataire in prestataires %} 
         <div class="border my-3">
         {# ici il me donne la categories le string comme id et je veux le nom je dois aller chercher le nom de la catégorie via une nouvelle requête #}
-        {# je dois transformer mes objets prestataire.commune en des strings revoir la théorie en POO  VOIR fichier Entity User.php méthode __toString() #}
+        {# je dois transformer mes OBJETS prestataire.commune en des strings revoir la théorie en POO  VOIR fichier Entity User.php méthode __toString() #}
         
-            {% for categorie in categories %}
+        {# categorieServices est une collection, il faut donc la parcourir #}
+            {% for categorie in prestataire.categorieServices %}
             <p>nom de la catégorie: {{categorie.nom}}</p> 
             {% endfor %}
             <p class="fw-bold">nom du prestataire : {{prestataire.nom}}</p>
 
             <p>numéro du code postal: {{prestataire.adresseCP}}</p>
             <p>nom de la commune : {{prestataire.commune }}</p>
-            <p>nom de la province : {{prestataire.adresseProvince|upper}}</p>  
+            <p>nom de la province : {{prestataire.adresseProvince|upper}}</p> 
+             
+            {# A ma route, je vais passer l'id du prestataire recherché #}
+            <a class="btn btn-primary" href="{{ path('app_detailPrestataire', {'id': prestataire.id}) }}">détail du PRESTATAIRE</a>
+            
             
         </div>
         {% endfor %}    

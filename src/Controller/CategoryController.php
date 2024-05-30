@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController
 {
-    // #[Route('/test2', name: 'app_test2')] // la route test2 permet de visualisé la liste des Categories mais comme on va inclure cette liste dans base.html.twig, la route ne sera plus utilisée et donc je peux la commenter.
+    // #[Route('/test2', name: 'app_test2')] // la route test2 permet de visualisé la liste des Categories mais comme on va inclure cette liste dans base.html.twig, la route ne sera plus utilisée et donc je peux la commenter. La request va servir à récupérer en POST et en GET les informations
     
     /**
      * @function listeCategory : liste les catégories de services
