@@ -41,35 +41,60 @@
 			<div class="col-sm-4 border my-3">
 				<p>LOGO / IMAGES</p>
 				{% for src in prestataire.logo %}
-				{# <p>{{prestataires|length}} 
-            {% if prestataires|length  == 0 or prestataires|length == 1 %} résultat 
-            {% else %} résultats 
-            {% endif %} pour votre recherche </p> #}
+					{# <p>{{prestataires|length}} 
+					{% if prestataires|length  == 0 or prestataires|length == 1 %} résultat 
+					{% else %} résultats 
+					{% endif %} pour votre recherche </p> #}
 
 					<div class="picture">
-					
-					<img src='/images/logoPrestataire/{{src}}' alt="" width="180" height="auto">
-					/
+
+						<img src='/images/logoPrestataire/{{src}}' alt="" width="180" height="auto">
+						/
 					</div>
 				{% endfor %}
 
 			</div>
 			<div class="col-sm-4 border my-3">
-				<h2 class="fw-bold">Promotions du moment :  
+				<h2 class="fw-bold">Promotions du moment :
 				</h2>
-				<p>Promo(s) : </p>
-				{# Attention en TWIG il faut formater sa date #}
-				{% for promo in prestataire.promotion %}
-					<p> 
-						{{promo.nom}} :
-					</p>
-					<p> <i>
-					{{promo.description}} </i></p>
-					<p>date de début : {{promo.debut|date("d/m/Y", "Europe/Paris")}}</p>
-					<p>date de fin : {{promo.fin|date("d/m/Y", "Europe/Paris")}}</p>
-
 				
+
+
+				{% for promo in prestataire.promotion %}
+					{# Attention en TWIG il faut formater sa date ; maintenant je vais transformer datetime de promo.affichageDe EN date via TWIG documentation date() #}
+					{% if (date(promo.affichageDe) <=  date()) and (date(promo.affichageJusqua) >= date()) %}
+
+					<p>Promo(s) : </p>
+						{# Si la date d'affichage de affichageDe est antérieure à la date de promo.debut
+											ALORS afficher la promo  ET CE jusqu'à la date de fin de l'affichage affichageJusqua 
+											affichageDe 5 mai promo.debut 15 mai affichageJusqua 30 mai promo.fin 30 mai
+											Il s'agit d'une double CONDITION
+											SI condition && SI condition 
+											ALORS on affiche la promo
+															29 MAI				3 JUIN
+											condition1 : date affichageDe  <= date du JOUR ;
+															29 MAI					3 JUIN
+											condition2 : date affichageJusqua >= date du JOUR; 
+											#}
+						<p>
+							{{promo.nom}}
+							:
+						</p>
+						<p>
+							<i>
+								{{promo.description}}
+							</i>
+						</p>
+						<p>date de début :
+							{{promo.debut|date("d/m/Y", "Europe/Paris")}}</p>
+						<p>date de fin :
+							{{promo.fin|date("d/m/Y", "Europe/Paris")}}</p>
+					{% else %}
+					<p>Pas de promo pour l'instant</p>
+					{% endif %}
+					
 				{% endfor %}
+
 			</div>
 		</div>
 	</div>
