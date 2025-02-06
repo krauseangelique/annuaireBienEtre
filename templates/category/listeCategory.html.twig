@@ -2,7 +2,7 @@
 {% block listeCategory %}
 	<details class="">
 
-		<summary>Liste et desc. de nos catégories de services : </summary>
+		<summary>Liste et description de nos services : </summary>
 		<select class="beau" name="categorieDeService" id="categorieDeService" multiple>
 
 			{# if you don't want to expose the controller with a public URL,
@@ -18,13 +18,16 @@
 
 		<script>
 			document.addEventListener('DOMContentLoaded', function() {
+
 				const selectElement = document.getElementById('categorieDeService');
+
 				selectElement.addEventListener('change', function() {
 					const selectedOption = selectElement.options[selectElement.selectedIndex];
+
 					const url = selectedOption.getAttribute('data-url');
 						if (url) {
 						window.location.href = url;
-					}
+						}
 
 				});
 			});
