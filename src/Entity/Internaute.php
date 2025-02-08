@@ -6,10 +6,10 @@ use App\Repository\InternauteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+
 
 #[ORM\Entity(repositoryClass: InternauteRepository::class)]
-#[Broadcast]
+
 class Internaute extends User
 {
     #[ORM\Column(length: 255, nullable: true)]

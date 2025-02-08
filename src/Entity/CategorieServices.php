@@ -30,6 +30,8 @@ class CategorieServices
     #[ORM\Column(nullable: true)]
     private ?bool $valide = null;
 
+    
+
     #[ORM\OneToMany(mappedBy: 'categorieServices', targetEntity: Promotion::class)]
     private Collection $promotion;
 
@@ -38,6 +40,9 @@ class CategorieServices
 
     #[ORM\ManyToMany(targetEntity: Prestataire::class, mappedBy: 'categorieServices')]
     private Collection $prestataires;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
 
     public function __construct()
     {
@@ -171,5 +176,17 @@ class CategorieServices
     public function __toString()
     {
         return $this->getNom();
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 }

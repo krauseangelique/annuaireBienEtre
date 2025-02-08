@@ -25,9 +25,10 @@ final class Version20231221174939 extends AbstractMigration
         $this->addSql('ALTER TABLE position DROP FOREIGN KEY FK_462CE4F5BC3BA448');
         $this->addSql('DROP INDEX UNIQ_462CE4F5BC3BA448 ON position');
         $this->addSql('DROP INDEX UNIQ_462CE4F57BE4F98C ON position');
-        $this->addSql('ALTER TABLE position ADD internaute_id INT DEFAULT NULL, DROP internaute_id_id, DROP bloc_id_id');
-        $this->addSql('ALTER TABLE position ADD CONSTRAINT FK_462CE4F5CAF41882 FOREIGN KEY (internaute_id) REFERENCES internaute (id)');
-        $this->addSql('CREATE INDEX IDX_462CE4F5CAF41882 ON position (internaute_id)');
+        // $this->addSql('ALTER TABLE position ADD internaute_id INT DEFAULT NULL, DROP internaute_id_id, DROP bloc_id_id');
+        // $this->addSql('ALTER TABLE position ADD CONSTRAINT FK_462CE4F5CAF41882 FOREIGN KEY (internaute_id) REFERENCES internaute (id)');
+        // $this->addSql('CREATE INDEX IDX_462CE4F5CAF41882 ON position (internaute_id)');
+
     }
 
     public function down(Schema $schema): void
