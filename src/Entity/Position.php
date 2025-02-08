@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PositionRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
+
 
 #[ORM\Entity(repositoryClass: PositionRepository::class)]
 
@@ -21,7 +21,7 @@ class Position
 
 
     #[ORM\ManyToOne(inversedBy: 'position')]
-    private ?Internaute $internaute = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'position')]
     private ?Bloc $blocPosition = null; // Attention: relation Internaute-position-bloc fausse dans le schéma de BD ! 
@@ -48,14 +48,14 @@ class Position
 
 
 
-    public function getInternaute(): ?Internaute
+    public function getUser(): ?User
     {
-        return $this->internaute;
+        return $this->user;
     }
 
-    public function setInternaute(?Internaute $internaute): static
+    public function setUser(?User $user): static
     {
-        $this->internaute = $internaute;
+        $this->user = $user;
 
         return $this;
     }

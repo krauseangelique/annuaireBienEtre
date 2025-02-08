@@ -20,9 +20,9 @@ final class Version20231221150457 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE position (id INT AUTO_INCREMENT NOT NULL, internaute_id_id INT DEFAULT NULL, bloc_id_id INT DEFAULT NULL, ordre INT DEFAULT NULL, UNIQUE INDEX UNIQ_462CE4F5BC3BA448 (internaute_id_id), UNIQUE INDEX UNIQ_462CE4F57BE4F98C (bloc_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE position ADD CONSTRAINT FK_462CE4F5BC3BA448 FOREIGN KEY (internaute_id_id) REFERENCES internaute (id)');
-        $this->addSql('ALTER TABLE position ADD CONSTRAINT FK_462CE4F57BE4F98C FOREIGN KEY (bloc_id_id) REFERENCES bloc (id)');
+        // $this->addSql('CREATE TABLE position (id INT AUTO_INCREMENT NOT NULL, internaute_id_id INT DEFAULT NULL, bloc_id_id INT DEFAULT NULL, ordre INT DEFAULT NULL, UNIQUE INDEX UNIQ_462CE4F5BC3BA448 (internaute_id_id), UNIQUE INDEX UNIQ_462CE4F57BE4F98C (bloc_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        // $this->addSql('ALTER TABLE position ADD CONSTRAINT FK_462CE4F5BC3BA448 FOREIGN KEY (internaute_id_id) REFERENCES internaute (id)');
+        // $this->addSql('ALTER TABLE position ADD CONSTRAINT FK_462CE4F57BE4F98C FOREIGN KEY (bloc_id_id) REFERENCES bloc (id)');
         $this->addSql('ALTER TABLE internaute DROP FOREIGN KEY FK_6C8E97CCFB88E14F');
         $this->addSql('DROP INDEX UNIQ_6C8E97CCFB88E14F ON internaute');
         $this->addSql('ALTER TABLE internaute DROP utilisateur_id');
