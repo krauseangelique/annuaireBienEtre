@@ -171,27 +171,27 @@ class Internaute extends User
         return $this->position;
     }
 
-    public function addPosition(Position $position): static
-    {
-        if (!$this->position->contains($position)) {
-            $this->position->add($position);
-            $position->setInternaute($this);
-        }
+    // public function addPosition(Position $position): static
+    // {
+    //     if (!$this->position->contains($position)) {
+    //         $this->position->add($position);
+    //         $position->setInternaute($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removePosition(Position $position): static
-    {
-        if ($this->position->removeElement($position)) {
-            // set the owning side to null (unless already changed)
-            if ($position->getInternaute() === $this) {
-                $position->setInternaute(null);
-            }
-        }
+    // public function removePosition(Position $position): static
+    // {
+    //     if ($this->position->removeElement($position)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($position->getInternaute() === $this) {
+    //             $position->setInternaute(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Prestataire>
