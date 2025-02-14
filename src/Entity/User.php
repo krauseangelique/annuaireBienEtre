@@ -16,7 +16,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 
 #[DiscriminatorColumn(name: "discr", type: "string")]
-#[DiscriminatorMap(["user" => "User", "internaute" => "Internaute", "prestataire" => "Prestataire"])]
+// le chemin complet jusqu'à la class ex. "user" => User::class
+#[DiscriminatorMap(["user" => User::class, "internaute" => Internaute::class, "prestataire" => Prestataire::class])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType('JOINED')]
 // #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -39,7 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     // [ORM\Column(type: 'json')]
     // protected array $roles = [];
-    #[ORM\Column] 
+    #[ORM\Column]
     protected array $roles = [];
 
     /**
@@ -99,7 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
-// https://symfony.com/doc/current/security.html self au lieu de static idem role
+    // https://symfony.com/doc/current/security.html self au lieu de static idem role
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -128,7 +129,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return array_unique($roles);
     }
-// Le mot-clef self permet d'utiliser une méthode ou une propriété de la classe elle-même. Utiliser ces mots clefs évite simplement de répéter le nom de la classe dans ton code
+    // Le mot-clef self permet d'utiliser une méthode ou une propriété de la classe elle-même. Utiliser ces mots clefs évite simplement de répéter le nom de la classe dans ton code
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -291,10 +292,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-    
+
     // Méthode pour convertir l'OBJET en chaîne de caractères
-    public function __toString(){
+    public function __toString()
+    {
         return "User CP: " . $this->adresseCP . ", Commune: " . $this->commune . ", Province: " . $this->adresseProvince;
     }
 }
-

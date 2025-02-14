@@ -30,14 +30,13 @@ class Internaute extends User
     #[ORM\OneToOne(inversedBy: 'internaute', cascade: ['persist', 'remove'])]
     private ?Image $image = null;
 
-    #[ORM\ManyToMany(targetEntity: Prestataire::class, mappedBy: 'internaute')]
-    private Collection $prestataires;
+
 
     #[ORM\OneToMany(mappedBy: 'internaute', targetEntity: Position::class)]
     private Collection $position;
 
     #[ORM\ManyToMany(targetEntity: Prestataire::class, inversedBy: 'internautesFavoris')]
-    private Collection $prestatairesFavoris; // sur le MPD(Tables) c'est  Favoris ??
+    private Collection $prestatairesFavoris; // sur le MPD(Tables) c'est  internaute_prestataire
 
 
 
@@ -45,7 +44,7 @@ class Internaute extends User
     {
         $this->abus = new ArrayCollection();
         $this->commentaire = new ArrayCollection();
-        $this->prestataires = new ArrayCollection();
+
         $this->position = new ArrayCollection();
         $this->prestatairesFavoris = new ArrayCollection();
     }

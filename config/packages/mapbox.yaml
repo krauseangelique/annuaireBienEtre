@@ -1,0 +1,5 @@
+#config/packages/mapbox.yaml
+parameters:
+  mapbox_token: '%env(MAPBOX_TOKEN)%'
+
+  # récupération du Token public copié dans le site console.mapbox.com. Celui-ci sera écrit dans le fichier .env 

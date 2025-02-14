@@ -14,7 +14,7 @@ final class Version20231217185842 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'mise à jour table User avec relations inhetitanceType sur Internaute';
+        return 'mise à jour table User avec relations inheritanceType sur Internaute';
     }
 
     public function up(Schema $schema): void

@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Map search Map
+{% endblock %}
+
+{% block body %}
+	<style>
+		.example-wrapper {
+			margin: 1em auto;
+			max-width: 800px;
+			width: 95%;
+			font: 18px / 1.5 sans-serif;
+		}
+		.example-wrapper code {
+			background: #F5F5F5;
+			padding: 2px 6px;
+		}
+		#map {
+			width: 100%;
+			height: 500px;
+		}
+		.search-container {
+			margin: 10px auto;
+			text-align: center;
+		}
+		input[type="text"] {
+			width: 300px;
+			padding: 8px;
+			margin-right: 10px;
+		}
+		button {
+			padding: 8px 15px;
+			cursor: pointer;
+		}
+	</style>
+
+	<div class="search-container">
+		<input type="text" name="searchInput" id="searchInput" placeholder="Entrer une adresse...">
+		<button onclick="searchLocation()">Rechercher</button>
+	</div>
+	<div id="map" class=" example-wrapper border">
+		<h1>Voici la carte</h1>
+
+		<!-- Inclure Mapbox via CDN -->
+		<script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+		<link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet"/>
+
+		<script>
+
+			mapboxgl.accessToken = "{{ mapbox_token }}";
+
+let map = new mapboxgl.Map({
+container: 'map',
+style: 'mapbox://styles/mapbox/streets-v11',
+center: [
+5.5718, 50.6372
+], // Liège
+zoom: 12
+});
+
+function searchLocation() {
+let query = document.getElementById('searchInput').value;
+
+if (! query) 
+return alert("Veuillez entrer une adresse");
+
+
+
+fetch('/map/search?query=' + encodeURIComponent(query)).then(response => response.json()).then(data => {
+if (!data.longitude || !data.latitude) {
+alert("Adresse introuvable ");
+
+return;
+}
+
+let coords = [
+data.longitude, data.map.flyTo(
+{center: coords, zoom: 14}
+)
+];
+
+new mapboxgl.Marker().setLngLat(coords).setPopup(new mapboxgl.Popup().setText(data.full_address)).addTo(map);
+}).catch(error => console.error("Erreur de recherche : ", error));
+
+}
+		</script>
+
+	</div>
+{% endblock %}
