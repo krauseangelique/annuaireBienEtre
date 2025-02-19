@@ -38,8 +38,10 @@
 		<input type="text" name="searchInput" id="searchInput" placeholder="Entrer une adresse...">
 		<button onclick="searchLocation()">Rechercher</button>
 	</div>
-	<div id="map" class=" example-wrapper border">
-		<h1>Voici la carte</h1>
+<h1>Voici la carte</h1>
+
+	<div id="map" class=" example-wrapper border"></div>
+		
 
 		<!-- Inclure Mapbox via CDN -->
 		<script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
@@ -85,5 +87,5 @@ new mapboxgl.Marker().setLngLat(coords).setPopup(new mapboxgl.Popup().setText(da
 }
 		</script>
 
-	</div>
+	
 {% endblock %}

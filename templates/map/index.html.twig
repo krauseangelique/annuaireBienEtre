@@ -33,56 +33,69 @@
 			cursor: pointer;
 		}
 	</style>
-
+	<!-- formulaire de recherche d'adresse -->
 	<div class="search-container">
 		<input type="text" name="searchInput" id="searchInput" placeholder="Entrer une adresse...">
 		<button onclick="searchLocation()">Rechercher</button>
 	</div>
-	<div id="map" class=" example-wrapper border">
-		<h1>Voici la carte</h1>
 
-		<!-- Inclure Mapbox via CDN -->
-		<script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
-		<link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet"/>
+	<h1>Voici la carte</h1>
+	<!-- le contenu de la div map va être REMPLACÉ par l'execution du script de la map -->
+	<div id="map" class=" example-wrapper border"></div>
+	{# <div id="map2" class=" example-wrapper border"></div> #}
 
-		<script>
 
-			mapboxgl.accessToken = "{{ mapbox_token }}";
+	<!-- Inclure Mapbox via CDN -->
+	<script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+	<link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet"/>
 
-			let map = new mapboxgl.Map({
-			container: 'map',
-			style: 'mapbox://styles/mapbox/streets-v11',
-			center: [
-			5.5718, 50.6372
-			], // Liège
-			zoom: 12
-			});
+	<script>
+		// variable du Controller
+mapboxgl.accessToken = "{{ mapbox_token }}";
 
-			function searchLocation() {
-				let query = document.getElementById('searchInput').value;
+let map = new mapboxgl.Map({
+container: 'map',
+style: 'mapbox://styles/mapbox/streets-v11',
+center: [
+5.5718, 50.6372
+], // Liège
+zoom: 12
+});
 
-				if (! query) 
-				return alert("Veuillez entrer une adresse");
 
-				fetch('/map/search?query=' + encodeURIComponent(query)).then(response => response.json()).then(data => {
-				if (!data.longitude || !data.latitude) {
-				alert("Adresse introuvable ");
+function searchLocation() { 
+	
+// récupération de la valeur de l'input
+let query = document.getElementById('searchInput').value;
 
-				return;
-				}
+if (! query) 
+return alert("Veuillez entrer une adresse");
 
-				let coords = [
-				data.longitude, data.map.flyTo(
-				{center: coords, zoom: 14}
-				)
-				];
 
-				new mapboxgl.Marker().setLngLat(coords).setPopup(new mapboxgl.Popup().setText(data.full_address)).addTo(map);
-				}).catch(error => console.error("Erreur de recherche : ", error));
 
-			}
-			
-		</script>
+// requête AJAX
+fetch('/map/search?query=' + encodeURIComponent(query)).then(response => response.json()).then(data => {
 
-	</div>
+if (!data.longitude || !data.latitude) {
+alert("Adresse introuvable ");
+
+return;
+}
+
+// !!! voir dans l'API data.map.flyTo()
+let coords = [
+
+data.longitude, data.map.flyTo(
+	// !!! voir l'erreur pas possible let coords et coords dans le tableau !!! 
+{center: coords, zoom: 14}
+)
+];
+
+new mapboxgl.Marker().setLngLat(coords).setPopup(new mapboxgl.Popup().setText(data.full_address)).addTo(map);
+}).catch(error => console.error("Erreur de recherche : ", error));
+
+}
+	</script>
+
+
 {% endblock %}
