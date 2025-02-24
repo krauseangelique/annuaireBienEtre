@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MapController extends AbstractController
 {
     
-    #[Route('/map', name: 'app_map')]    
+    #[Route('/map', name: 'app_map')]    // #[Route('/map', name: 'map_index')]
     /**
      * index permet d'AFFICHER la carte (map) 
      *
@@ -19,6 +19,7 @@ class MapController extends AbstractController
      */
     public function index(): Response
     {
+        //   return $this->render('mapbox/map.html.twig', [
         return $this->render('map/index.html.twig', [
 
             // 'controller_name' => 'MapController',

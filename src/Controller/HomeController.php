@@ -44,20 +44,20 @@ class HomeController extends AbstractController
     #[Route('/test', name: 'app_test')]
     public function test(MailerInterface $mailerInterface): Response
     {
-        // Ecriture du mail test
-        $email = (new Email())
-        ->from('hello@example.com')
-        ->to('you@examle.com')
-        ->subject('Time for Symfony Mailer!')
-        ->text('Sending emails is fun again!')
-        ->html('<p>See Twig integration for better HTML integration!</p>');
+        // // Ecriture du mail test
+        // $email = (new Email())
+        // ->from('hello@example.com')
+        // ->to('you@examle.com')
+        // ->subject('Time for Symfony Mailer!')
+        // ->text('Sending emails is fun again!')
+        // ->html('<p>See Twig integration for better HTML integration!</p>');
 
-        // Utilisation du MailerInterface
-        try{
-            $mailerInterface->send($email);
-        } catch(TransportExceptionInterface $error){
-            echo $error;
-        }
+        // // Utilisation du MailerInterface
+        // try{
+        //     $mailerInterface->send($email);
+        // } catch(TransportExceptionInterface $error){
+        //     echo $error;
+        // }
         
 
 
