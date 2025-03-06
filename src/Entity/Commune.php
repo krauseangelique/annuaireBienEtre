@@ -6,10 +6,11 @@ use App\Repository\CommuneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityRepository;
 
 #[ORM\Entity(repositoryClass: CommuneRepository::class)]
 
-class Commune
+class Commune extends EntityRepository
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -56,7 +57,7 @@ class Commune
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            
+
             $user->setCommune($this);
         }
 
@@ -77,8 +78,22 @@ class Commune
 
     // ajout de la méthode __toString() pour permettre de transformer un objet en string
     public function __toString()
-{
-    return $this->getCommune();
-}
+    {
+        return $this->getCommune();
+    }
 
+    // !!! Depuis les repositories, vous avez également la possibilité d'utiliser la méthode getEntityName() pour récupérer la classe de l'entité du repository courant (objectif n'avoir qu'une fois chaque commune):
+    public function getAll()
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                `SELECT DISTINCT commune
+                FROM Commune 
+                ORDER BY commune ASC`
+            )
+
+
+            ->getResult()
+        ;
+    }
 }

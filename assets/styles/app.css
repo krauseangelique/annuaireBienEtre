@@ -7,51 +7,64 @@ body {
 *,
 *::before,
 *::after {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-p{
+p {
     color: #f4d76b;
 }
-footer{
+
+footer {
     border: 1px solid greenyellow;
 }
-.recherche{
-    background-color: #9800B0;
-    color:#F9E8AB;
+
+.gold {
+    border: 5px solid rgb(240, 240, 35);
 }
 
-h1,h2,h3{
+.recherche {
+    background-color: #9800B0;
+    color: #F9E8AB;
+}
+
+h1,
+h2,
+h3 {
     color: #F9E8AB;
 }
 
 /* TODO enlever la bordure AVANT de rendre le travail */
-main{
+main {
     border: 1px solid green;
 }
-form.global{
+
+form.global {
     border: 1px solid #9800B0;
     background-color: #9800B0;
     border-radius: 5px;
 }
-.bold{
+
+.bold {
     font-weight: 700;
 }
-.btn-primary{
+
+.btn-primary {
     background-color: #9800B0;
     border-color: #9800B0;
 }
-.btn-primary:hover{
-    background-color : #800080;
+
+.btn-primary:hover {
+    background-color: #800080;
     border-color: #800080;
 }
 
-.icone{
+.icone {
     color: #f4d76b;
 }
-a{
+
+a {
     text-decoration: none;
     color: inherit;
 }
@@ -61,24 +74,24 @@ recherche fermée ►
 recherche ouverte ▼
 https://freefrontend.com/css-accordions/
  */
-.beau{
+.beau {
     width: 98%;
 }
 
 .page__wrapper {
-	height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font-family: "Syne Mono";
-	flex-direction: column;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Syne Mono";
+    flex-direction: column;
     margin-top: 1rem;
     padding-top: 1rem;
 }
 
 .accordion {
-	max-width: 500px;
-	width: calc(100% - 20px);
+    max-width: 500px;
+    width: calc(100% - 20px);
     margin-top: 1rem;
     margin-right: 0.5rem;
     margin-left: 0.5rem;
@@ -87,38 +100,47 @@ https://freefrontend.com/css-accordions/
     padding-right: 1rem;
 
 }
-.accordion li{
+
+.accordion li {
     padding-left: 1rem;
 }
+
 details {
-	background-color: #800080; /* Couleur du LOGO #800080 */
-	margin-bottom: 10px;
+    background-color: #800080;
+    /* Couleur du LOGO #800080 */
+    margin-bottom: 10px;
     border: 1px solid 999;
     border-radius: 3px;
-	filter: drop-shadow(2px 2px 5px #f4d76b);  /* #ccc */
-   /* box-shadow: 2px 2px 5px #f4d76b;  #9800B0 */
+    filter: drop-shadow(2px 2px 5px #f4d76b);
+    /* #ccc */
+    /* box-shadow: 2px 2px 5px #f4d76b;  #9800B0 */
 }
+
 details:hover {
-	filter: drop-shadow(5px 5px 4px #0A0A0A); 
+    filter: drop-shadow(5px 5px 4px #0A0A0A);
 }
-details > summary {
-	color: #f4de64;
-	padding: 5px 15px;
-	font-size: 1em;
-	cursor: pointer;
+
+details>summary {
+    color: #f4de64;
+    padding: 5px 15px;
+    font-size: 1em;
+    cursor: pointer;
 }
-details > p {
-	padding: 5px 10px 10px 20px;
-	color: #ddd;
-	font-size: 1.1em;
+
+details>p {
+    padding: 5px 10px 10px 20px;
+    color: #ddd;
+    font-size: 1.1em;
 }
+
 .userConnection {
     font-size: small;
 }
+
 .footDeconnect {
     background-color: #9800B0;
     border-color: #9800B0;
-    margin-top : 1rem;
+    margin-top: 1rem;
     font-size: 1.25rem;
     border-radius: .3rem;
     display: inline-block;
@@ -128,6 +150,7 @@ details > p {
     padding-bottom: 1rem;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
+
 .footDeconnect a {
     color: #ddd;
     align-items: center;
@@ -136,6 +159,7 @@ details > p {
 .border-solid {
     border: 1px solid orange;
 }
-.blue{
-    border: 3px solid blue; 
+
+.blue {
+    border: 3px solid blue;
 }

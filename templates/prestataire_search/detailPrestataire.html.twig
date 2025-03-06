@@ -4,98 +4,231 @@
 {% endblock %}
 
 {% block content %}
-	<div class="border my-3">
-		<h1>Fiche : Détail de votre Prestataire</h1>
-		<div class="d-flex p-2 bd-highlight">
-			<div class="col-sm-4 border my-3">
-				<h2 class="fw-bold">
-					{{prestataire.nom}}</h2>
-				<h2>Adresse</h2>
-				<p>Province :
-					{{prestataire.adresseProvince|upper}}</p>
-				<p>Code postal:
-					{{prestataire.adresseCP}}</p>
-				<p>Commune :
-					{{prestataire.commune }}</p>
-				<p>Nom de la rue :
-					{{prestataire.adresseRue}}</p>
-				<p>Numéro du commerce :
-					{{prestataire.adresseNum}}</p>
-				<h2>Pour contacter le prestataire</h2>
-				<p>numéro de tel :
-					{{prestataire.numTel}}</p>
-				<p>site Internet :
-					{{prestataire.siteInternet}}</p>
+	<div class="d-flex">
 
-				<p>catégorie(s) :
-					{% for cat in prestataire.categorieServices %}
-						{{cat}}
-						/
+		<div class=" col-12 my-3">
+
+			<h1>Fiche : Détail de votre Prestataire</h1>
+			<div class="d-flex p-2 bd-highlight ">
+				<div class="col-sm-4 border my-3">
+					<h2 class="fw-bold">
+						{{prestataire.nom}}</h2>
+					<h2>Adresse</h2>
+					<p>Province :
+						{{prestataire.adresseProvince|upper}}</p>
+					<p>Code postal:
+						{{prestataire.adresseCP}}</p>
+					<p>Commune :
+						{{prestataire.commune }}</p>
+					<p>Nom de la rue :
+						{{prestataire.adresseRue}}</p>
+					<p>Numéro du commerce :
+						{{prestataire.adresseNum}}</p>
+					<h2>Pour contacter le prestataire</h2>
+					<p>numéro de tel :
+						{{prestataire.numTel}}</p>
+					<p>site Internet :
+						{{prestataire.siteInternet}}</p>
+
+					<p>catégorie(s) :
+						{% for cat in prestataire.categorieServices %}
+							{{cat}}
+							/
+						{% endfor %}
+					</p>
+
+					<p>numéro de TVA :
+						{{prestataire.numTVA}}</p>
+				</div>
+				{# ICI IMAGES ET LOGOS du prestataire #}
+				<div class="col-sm-4 border my-3">
+					<p>LOGO / IMAGES</p>
+					{% for src in prestataire.logo %}
+						{# <p>{{prestataires|length}} 
+																																																																																																								{% if prestataires|length  == 0 or prestataires|length == 1 %} résultat 
+																																																																																																								{% else %} résultats 
+																																																																																																								{% endif %} pour votre recherche </p> #}
+
+						<div class="picture">
+
+							<img src='/images/logoPrestataire/{{src}}' alt="" width="180" height="auto">
+							/
+						</div>
 					{% endfor %}
-				</p>
 
-				<p>numéro de TVA :
-					{{prestataire.numTVA}}</p>
+				</div>
+				<div class="col-sm-4 border my-3">
+					<h2 class="fw-bold">Promotions du moment :
+					</h2>
+
+
+					{% for promo in prestataire.promotion %}
+						{# Attention en TWIG il faut formater sa date ; maintenant je vais transformer datetime de promo.affichageDe EN date via TWIG documentation date() #}
+						{% if (date(promo.affichageDe) <=  date()) and (date(promo.affichageJusqua) >= date()) %}
+
+							<p>Promo(s) :
+							</p>
+							{# Si la date d'affichage de affichageDe est antérieure à la date de promo.debut
+																																																																																																																															ALORS afficher la promo  ET CE jusqu'à la date de fin de l'affichage affichageJusqua 
+																																																																																																																															affichageDe 5 mai promo.debut 15 mai affichageJusqua 30 mai promo.fin 30 mai
+																																																																																																																															Il s'agit d'une double CONDITION
+																																																																																																																															SI condition && SI condition 
+																																																																																																																															ALORS on affiche la promo
+																																																																																																																																			29 MAI				3 JUIN
+																																																																																																																															condition1 : date affichageDe  <= date du JOUR ;
+																																																																																																																																			29 MAI					3 JUIN
+																																																																																																																															condition2 : date affichageJusqua >= date du JOUR; 
+																																																																																																																															#}
+							<p>
+								{{promo.nom}}
+								:
+							</p>
+							<p>
+								<i>
+									{{promo.description}}
+								</i>
+							</p>
+							<p>date de début :
+								{{promo.debut|date("d/m/Y", "Europe/Paris")}}</p>
+							<p>date de fin :
+								{{promo.fin|date("d/m/Y", "Europe/Paris")}}</p>
+						{% else %}
+							<p>Pas de promo pour l'instant</p>
+						{% endif %}
+
+					{% endfor %}
+
+				</div>
 			</div>
-			{# ICI IMAGES ET LOGOS du prestataire #}
-			<div class="col-sm-4 border my-3">
-				<p>LOGO / IMAGES</p>
-				{% for src in prestataire.logo %}
-					{# <p>{{prestataires|length}} 
-					{% if prestataires|length  == 0 or prestataires|length == 1 %} résultat 
-					{% else %} résultats 
-					{% endif %} pour votre recherche </p> #}
+		</div>
+		<div class="col-6 gold">
+			<h2 class="fw-bold">Localisation : Map</h2>
+			
+			<p>Province :
+				{{prestataire.adresseProvince|upper}}</p>
+			<p>Code postal:
+				{{prestataire.adresseCP}}</p>
+			<p>Commune :
+				{{prestataire.commune }}</p>
+			<p>Nom de la rue :
+				{{prestataire.adresseRue}}</p>
+			<p>Numéro du commerce :
+				{{prestataire.adresseNum}}</p>
 
-					<div class="picture">
+			<div id="map" class=" example-wrapper border "></div>
+			
 
-						<img src='/images/logoPrestataire/{{src}}' alt="" width="180" height="auto">
-						/
-					</div>
-				{% endfor %}
+			<!-- Inclure Mapbox via CDN -->
+			<script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+			<link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet"/>
 
-			</div>
-			<div class="col-sm-4 border my-3">
-				<h2 class="fw-bold">Promotions du moment :
-				</h2>
-				
+			<style>
+				.example-wrapper {
+					margin: 1em auto;
+					max-width: 800px;
+					width: 95%;
+					font: 18px / 1.5 sans-serif;
+				}
+				.example-wrapper code {
+					background: #F5F5F5;
+					padding: 2px 6px;
+				}
+				#map {
+					width: 100%;
+					height: 500px;
+				}
+				.search-container {
+					margin: 10px auto;
+					text-align: center;
+				}
+				input[type="text"] {
+					width: 300px;
+					padding: 8px;
+					margin-right: 10px;
+				}
+				button {
+					padding: 8px 15px;
+					cursor: pointer;
+				}
+			</style>
+
+			<script>
+				// variable du Controller
+mapboxgl.accessToken = "{{ mapbox_token }}";
+
+// 1. variables récupérées de la page détail prestataire en Twig que je passe en JS via des variables
+let adresseCP = {{ prestataire.adresseCP }};
+console.log(adresseCP);
+let adresseRue = "{{ prestataire.adresseRue }}";
+console.log(adresseRue);
+let adresseNum = {{ prestataire.adresseNum }};
+console.log(adresseNum);
+let adresseProvince = "{{ prestataire.adresseProvince|upper }}";
+console.log(adresseProvince);
+let adresseCommune = "{{ prestataire.commune }}";
+console.log(adresseCommune);
+
+// 2. récupérer mes variables dans la 'query'
+let query = adresseRue + ' ' + adresseNum + ' ' + adresseCP + ' ' + adresseCommune + ' ' + adresseProvince;
+console.log(query);
+// Gospertstrasse 30 4700 Eupen LIÈGE
+// Au chargement de la page je fais appel à la fonction searchlocation() qui va me retourner les coordonnées de l'adresse construite dans la variable query
+document.addEventListener("DOMContentLoaded", (event) => {
+
+console.log("Hello");
+// Appel à la fonction
+searchLocation();
+
+});
 
 
-				{% for promo in prestataire.promotion %}
-					{# Attention en TWIG il faut formater sa date ; maintenant je vais transformer datetime de promo.affichageDe EN date via TWIG documentation date() #}
-					{% if (date(promo.affichageDe) <=  date()) and (date(promo.affichageJusqua) >= date()) %}
+// coordonnées pour Liège  ===> coordonnées de l'adresse IP
+let longitude = 5.5718; 
+let latitude = 50.6372;
 
-					<p>Promo(s) : </p>
-						{# Si la date d'affichage de affichageDe est antérieure à la date de promo.debut
-											ALORS afficher la promo  ET CE jusqu'à la date de fin de l'affichage affichageJusqua 
-											affichageDe 5 mai promo.debut 15 mai affichageJusqua 30 mai promo.fin 30 mai
-											Il s'agit d'une double CONDITION
-											SI condition && SI condition 
-											ALORS on affiche la promo
-															29 MAI				3 JUIN
-											condition1 : date affichageDe  <= date du JOUR ;
-															29 MAI					3 JUIN
-											condition2 : date affichageJusqua >= date du JOUR; 
-											#}
-						<p>
-							{{promo.nom}}
-							:
-						</p>
-						<p>
-							<i>
-								{{promo.description}}
-							</i>
-						</p>
-						<p>date de début :
-							{{promo.debut|date("d/m/Y", "Europe/Paris")}}</p>
-						<p>date de fin :
-							{{promo.fin|date("d/m/Y", "Europe/Paris")}}</p>
-					{% else %}
-					<p>Pas de promo pour l'instant</p>
-					{% endif %}
-					
-				{% endfor %}
+let map = new mapboxgl.Map({
+container: 'map',
+style: 'mapbox://styles/mapbox/streets-v11',
+center: [
+longitude, latitude
+],
+zoom: 12
+});
 
-			</div>
+
+function searchLocation() { // let query = document.getElementById('searchInput').value; // récupération de la valeur de l'input
+
+
+if (! query) 
+return alert("Veuillez entrer une adresse");
+
+
+
+console.log("ceci est la query recherchée :" + query);
+// requête AJAX
+fetch('/map/search?query=' + encodeURIComponent(query)).then(response => response.json()).then(data => {
+
+if (!data.longitude || !data.latitude) {
+alert("Adresse introuvable ");
+
+return;
+}
+
+console.log(data.longitude, data.latitude);
+
+
+let coords = [data.longitude, data.latitude];
+// !!! voir dans l'API data.map.flyTo()
+map.flyTo({center: coords, zoom: 14});
+
+new mapboxgl.Marker().setLngLat(coords).setPopup(new mapboxgl.Popup().setText(data.full_address)).addTo(map);
+
+}).catch(error => console.error("Erreur de recherche : ", error));
+
+}
+			</script>
+
+
 		</div>
 	</div>
 

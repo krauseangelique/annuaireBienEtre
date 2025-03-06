@@ -18,12 +18,18 @@ class PrestataireSearchController extends AbstractController
 {
     // Détail d'UN prestataire
     #[Route('prestataire/detail/{id}', name: 'app_detailPrestataire')]
-    public function detailPrestataire(Prestataire $prestataire ): Response
+    public function detailPrestataire(Prestataire $prestataire): Response
     {
+        // dump($prestataire->getAdresseProvince());
+        // dd($prestataire);
+
         return $this->render('prestataire_search/detailPrestataire.html.twig', [
 
             'prestataire' => $prestataire,
-                
+
+            // je passe les infos pour la Map
+            'mapbox_token' => $_ENV['MAPBOX_TOKEN'],
+
         ]);
     }
 
@@ -32,14 +38,14 @@ class PrestataireSearchController extends AbstractController
     public function search(Request $request, EntityManagerInterface $entityManager): Response
     {
         // !! Pas de formulaire Symfony MAIS un formulaire dans twig (comme le formulaire d'inscription)
-    
+
         // 2. Je fais appel au Repository PrestataireRepository
         $repositoryPrestataire = $entityManager->getRepository(Prestataire::class);
 
         // 3. je fais appel à la méthode du Repository qui contient la requête
         // dump($request->request->get('nom')); // je récupère la valeur du champ introduit par l'utilisateur
         // dump($request->request->get('categorie')); // 1. je récupère la valeur du champ introduit par l'utilisateur (via le name du formulaire) 
-    
+
         // @TODO voir ce que j'envoie dans ma request !!! elle récupère bien les données du formulaire OK
         // dd($request);
 
@@ -51,16 +57,16 @@ class PrestataireSearchController extends AbstractController
         // dd($adresseCP); //20
 
         $adresseProvince = $request->request->get('province');
-    
-    
+
+
 
         $nom = $request->request->get('nom');
-    
+
         // 2. vérifier dans Result et recherche ce que je récupère. Normalement c'est une LISTE de prestataire
 
         // 3. je dois créer la vue qui est listePrestataire.html.twig et dans cette vue j'affiche les prestataires trouvés
         $resultatRecherches = $repositoryPrestataire->findPrestaire($categorieServices, $commune, $adresseCP, $adresseProvince, $nom);
-       // dd($resultatRecherches); // Tableau de prestataires
+        // dd($resultatRecherches); // Tableau de prestataires
 
         // /* Construction du tableau d'id de prestataires que je vais passer à ma recherche par la suite */
         // $categories = [];
@@ -78,8 +84,8 @@ class PrestataireSearchController extends AbstractController
         // dd($categorieServices);
 
         // Afficher le premier élement du tableau de recherche
-         // dump($resultatRecherches[0]->getCategorieServices()[0]->getNom());
-    
+        // dump($resultatRecherches[0]->getCategorieServices()[0]->getNom());
+
 
         // dd($resultatRecherches); 
         // return $this->redirectToRoute('app_home');
@@ -87,8 +93,7 @@ class PrestataireSearchController extends AbstractController
 
             'prestataires' => $resultatRecherches,
             // 'categories'   => $categorieServices,
-            
+
         ]);
     }
-
 }

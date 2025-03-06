@@ -17,6 +17,7 @@ class MapSearchController extends AbstractController
     {
         // 'controller_name' => 'MapSearchController',
         // $query = $request->query->get('query');
+        // je récupère ma query dans l'URL
         $address = $_GET['query'] ?? '';
 
         if (!$address) {

@@ -20,19 +20,25 @@ class ListeRecherchePrestataireController extends AbstractController
     {
         $communerecherche = $entityManager->getRepository(Commune::class);
         // Récupération de toutes les communes
-        $communes = $communerecherche->findAll();
+        //$communes = $communerecherche->findAll();
         // dd($communes); // liste de toutes les communes
+        $communes = $communerecherche->findBy([], ['commune' => 'ASC']);
+
+        // dd($communes); // affiche un array de 660 array avec id, commune, users dans commune cela est bien trié par ordre alphabétique
 
         $cprecherche = $entityManager->getRepository(CodePostal::class);
-        $codepostals = $cprecherche->findAll();
+        // $codepostals = $cprecherche->findAll();
+        $codepostals = $cprecherche->findBy([], ['codePostal' => 'ASC']);
 
         $provincerecherche = $entityManager->getRepository(Province::class);
-        $provinces = $provincerecherche->findAll();
+        // $provinces = $provincerecherche->findAll();
+        $provinces = $provincerecherche->findBy([], ['province' => 'ASC']);
 
         $categorierecherche = $entityManager->getRepository(CategorieServices::class);
         $categories = $categorierecherche->findAll();
-       // dd($codepostals);
-    
+        // $categories = $categorierecherche->findBy([], ['categorieServices' => 'ASC']);
+        // dd($codepostals);
+
         // RECHERCHE
         return $this->render('prestataire_search/recherchePrestataireSearch.html.twig', [
             //'controller_name' => 'ListeRecherchePrestataireController',
@@ -41,7 +47,7 @@ class ListeRecherchePrestataireController extends AbstractController
             'adresseProvinces' => $provinces,
 
             'categories' => $categories,
-        
+
         ]);
     }
 }
